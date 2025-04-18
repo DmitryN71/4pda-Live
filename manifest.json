@@ -1,0 +1,16 @@
+{
+	"name": "4PDA Инспектор",
+	"version": "4",
+    "version_name": "4.DEV",
+	"description": "Мониторинг изменений на форуме 4pda",
+	"homepage_url": "https://4pda-inspector.github.io/4pda-inspector/",
+
+	"manifest_version": 3,
+
+    "icons": {
+        "16": "img/icons/icon_16.png",
+        "32": "img/icons/icon_32.png",
+        "48": "img/icons/icon_48.png",
+        "128": "img/icons/icon_128.png"
+    }
+}
