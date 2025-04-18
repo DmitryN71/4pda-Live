@@ -24,5 +24,10 @@
         "32": "img/icons/icon_32.png",
         "48": "img/icons/icon_48.png",
         "128": "img/icons/icon_128.png"
-    }
+    },
+	"action": {
+		"default_title": "4PDA Инспектор",
+		"default_icon": "img/icons/icon_32.png",
+		"default_popup": "html/popup.html"
+	}
 }

@@ -1,0 +1,135 @@
+html {
+  min-height: 100%;
+}
+body {
+  min-height: 100%;
+  font-family: Verdana, Tahoma, Arial, "Trebuchet MS", sans-serif;
+  font-size: 13px;
+  background: #3F51B5;
+  background: linear-gradient(to bottom, #3F51B5 0%, #5E6FC7 100%);
+}
+.icon_mask {
+  background: #3F51B5;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+}
+.icon_mask:hover {
+  background: #0092E4;
+}
+.icon_mask:disabled {
+  background: #9E9E9E;
+}
+.icon_mask.svg {
+  mask-position: 50% 50%;
+  -webkit-mask-position: 50% 50%;
+  mask-size: contain;
+  -webkit-mask-size: contain;
+}
+#mainDiv {
+  margin: 10px auto;
+  width: 600px;
+  background: #FFF;
+  padding: 8px 15px;
+  border-radius: 10px;
+  color: #3F51B5;
+}
+#mainDiv.whatsnew {
+  margin-top: 50px;
+}
+#mainDiv.whatsnew p {
+  font-size: 15px;
+}
+.linkStyled {
+  cursor: pointer;
+}
+.linkStyled:hover {
+  color: #0092E4;
+}
+a {
+  color: #3F51B5;
+}
+p > label {
+  display: block;
+  width: fit-content;
+}
+span.header {
+  display: block;
+  font-weight: bold;
+}
+input.numbered {
+  width: 60px;
+}
+.infoLabel {
+  color: #9E9E9E;
+}
+input[type=checkbox] {
+  margin-right: 5px;
+}
+.highlight {
+  color: #00724D;
+}
+#userLinksDiv {
+  width: 100%;
+}
+#userLinksDiv .userLinkDiv {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+#userLinksDiv .userLinkDiv .deleteRow {
+  mask-image: url("/img/delete.svg");
+  -webkit-mask-image: url("/img/delete.svg");
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+#userLinksDiv .userLinkDiv .userLinkUrl {
+  flex-grow: 4;
+}
+#userLinksDiv .userLinkDiv .userLinkUrlTitle {
+  flex-grow: 1;
+  margin: 2px;
+}
+#userLinksDiv .userLinkDiv input.error {
+  border-color: #F44336;
+}
+#userLinkDivTemplate {
+  display: none;
+}
+#notification_sound_volume {
+  width: 200px;
+}
+#footer .info {
+  text-align: center;
+}
+#footer .info .logo {
+  height: 128px;
+  width: 128px;
+}
+#footer .info .caption {
+  font-weight: bold;
+  font-size: 16px;
+  margin: 0 0 10px 0;
+}
+#footer .info .farewell {
+  text-align: right;
+}
+#footer .info .donateLink {
+  border-radius: 10px;
+  color: #FFF;
+  padding: 7px 10px;
+  text-decoration: none;
+  background-color: #7A99D0;
+  background-image: linear-gradient(to bottom, #7A99D0 0, #3F51B5 100%);
+  background-repeat: no-repeat;
+  display: inline-block;
+  transition: background-position 1s, background-color 1s 1s;
+}
+#footer .info .donateLink:hover {
+  background-color: #3F51B5;
+  background-position-y: -40px;
+  transition: background-position 1s, background-color 0s;
+}
+/*# sourceMappingURL=options.css.map */

@@ -68,12 +68,15 @@ const bg = new class {
                             responses.forEach((data, index) => {
                                 switch (index) {
                                     case 0:
+                                        console.log('fav:', data);
                                         // Handle favorite themes response data here
                                         break;
                                     case 1:
+                                        console.log('QMS:', data);
                                         // Handle qms response data here
                                         break;
                                     case 2:
+                                        console.log('mentions', data);
                                         // Handle mentions response data here
                                         break;
                                 }

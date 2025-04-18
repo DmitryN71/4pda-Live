@@ -1,0 +1,78 @@
+@color_icon: #4F7BBE;
+
+@color_base: #3F51B5;
+@color_base_medium: #5E6FC7;
+@color_base_light: #7A99D0;
+@color_base_lightest: #D0D1FF;
+@color_base_hover: #0092E4;
+
+@color_highlight: #00724D;
+@color_highlight_hover: #5A9A5C;
+
+@color_disabled: #9E9E9E;
+
+@color_white: #FFFFFF;
+@color_red: #F44336;
+
+@color_black: #000000;
+@dark_theme_bg_color: #121212;
+@dark_theme_base_color: #D0D1FF;
+@dark_theme_highlight_color: #93F1C4;
+
+@transition-duration: 0.3s;
+
+.font-default() {
+    font-family: Verdana, Tahoma, Arial, "Trebuchet MS", sans-serif;
+    font-size: 13px;
+}
+.background-transition() {
+    transition: background-color @transition-duration;
+}
+
+.mask(@size: contain, @posX: 50%) {
+            mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+            mask-position: @posX 50%;
+    -webkit-mask-position: @posX 50%;
+            mask-size: @size;
+    -webkit-mask-size: @size;
+}
+.mask-image(@source) {
+            mask-image: @source;
+    -webkit-mask-image: @source;
+}
+.mask-position(@posX) {
+            mask-position: @posX 0;
+    -webkit-mask-position: @posX 0;
+}
+
+.square(@side) {
+    height: @side;
+    width: @side;
+}
+
+.icon_mask {
+    background: @color_base;
+            mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    &:hover {
+        background: @color_base_hover;
+    }
+    &:disabled {
+        background: @color_disabled;
+    }
+
+    &.svg {
+                mask-position: 50% 50%;
+        -webkit-mask-position: 50% 50%;
+                mask-size: contain;
+        -webkit-mask-size: contain;
+    }
+}
+
+.flex-row() {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
