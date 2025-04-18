@@ -94,3 +94,15 @@ const bg = new class {
             });
     }
 }
+
+// Listen for messages from popup or other extension parts
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === 'popup_loaded') {
+        sendResponse({
+            user_id: bg.user_id,
+            user_name: bg.user_name
+        });
+    }
+    // Return true if you want to send a response asynchronously
+    return true;
+});
