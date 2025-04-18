@@ -7,6 +7,18 @@
 
 	"manifest_version": 3,
 
+    "background": {
+		"service_worker": "background.js",
+        "type": "module"
+	},
+	"permissions": [
+		"alarms",
+		"storage"
+	],
+	"host_permissions": [
+		"https://4pda.to/"
+	],
+
     "icons": {
         "16": "img/icons/icon_16.png",
         "32": "img/icons/icon_32.png",
