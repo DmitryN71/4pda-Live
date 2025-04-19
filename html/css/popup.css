@@ -221,14 +221,15 @@ html.theme_dark #themesList > .oneTheme .oneTheme_markAsRead.loading {
 }
 #mainPanel #panelUsernameHBox {
   margin-left: 10px;
+  font-size: 18px;
 }
 #mainPanel #panelUsernameHBox #panelRefresh {
   mask-image: url("/img/refresh.svg");
   -webkit-mask-image: url("/img/refresh.svg");
 }
-#mainPanel #panelUsernameHBox #panelUsername {
+/* #mainPanel #panelUsernameHBox #panelUsername {
   margin: -4px 5px 0 0;
-}
+} */
 #userLinks {
   width: 100%;
   border-bottom: 1px dotted #3f51b5;

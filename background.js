@@ -7,9 +7,6 @@ const PERIOD_MINUTES = 0.5;
 chrome.runtime.onInstalled.addListener(() => {
     console.debug('onInstalled');
     bg.init();
-    // chrome.alarms.create('periodicApiCheck', {
-    //     periodInMinutes: PERIOD_MINUTES
-    // });
 });
 
 // Also set up the alarm if the service worker starts (in case of reload)
@@ -64,7 +61,6 @@ const bg = new class {
                     console.log('User:', user_data);
                     Promise.all(urls.map(url => fetch(url).then(response => response.text())))
                         .then(responses => {
-                            console.debug('API responses:', responses);
                             responses.forEach((data, index) => {
                                 switch (index) {
                                     case 0:
@@ -95,6 +91,12 @@ const bg = new class {
     }
 }
 
+function open_url(url) {
+    chrome.tabs.create({
+        url: url
+    });
+}
+
 // Listen for messages from popup or other extension parts
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'popup_loaded') {
@@ -102,6 +104,25 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             user_id: bg.user_id,
             user_name: bg.user_name
         });
+    } else if (message.action === 'open_url') {
+        let url = 'https://4pda.to/forum/index.php?';
+        switch (message.what) {
+            case 'user':
+                url += 'showuser=' + bg.user_id;
+                break;
+            case 'qms':
+                url += 'act=qms';
+                break;
+            case 'favorites':
+                url += 'act=fav';
+                break;
+            case 'mentions':
+                url += 'act=mentions';
+                break;
+            default:
+                return true;
+        }
+        open_url(url);
     }
     // Return true if you want to send a response asynchronously
     return true;
