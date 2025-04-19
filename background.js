@@ -1,5 +1,6 @@
 // background.js - Chrome Extension MV3 Service Worker
-import {parse_response} from './js/utils.js';
+import {parse_response, fetch4} from './js/utils.js';
+import {FavoriteTheme} from './js/fav.js';
 
 const PERIOD_MINUTES = 0.5;
 
@@ -12,9 +13,6 @@ chrome.runtime.onInstalled.addListener(() => {
 // Also set up the alarm if the service worker starts (in case of reload)
 chrome.runtime.onStartup.addListener(() => {
     console.debug('onStartup');
-    // chrome.alarms.create('periodicApiCheck', {
-    //     periodInMinutes: PERIOD_MINUTES
-    // });
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
@@ -33,11 +31,13 @@ const bg = new class {
     #initialized = false; 
     user_id = 0;
     user_name;
+    favorites;
 
     init() {
         if (this.#initialized) {
             return;
         }
+        this.favorites = [];
         this.update();
         chrome.alarms.create('periodicApiCheck', {
             periodInMinutes: PERIOD_MINUTES
@@ -49,23 +49,29 @@ const bg = new class {
     update() {
         console.debug('Update:', new Date());
 
-        fetch('https://4pda.to/forum/index.php?act=inspector&CODE=id')
-            .then(response => response.text())
+        fetch4('https://4pda.to/forum/index.php?act=inspector&CODE=id')
             .then(data => {
-                // Handle the response data here
-                // console.log('API response:', data);
                 let user_data = parse_response(data);
                 if (user_data && user_data.length == 2) {
                     this.user_id = parseInt(user_data[0]);
                     this.user_name = user_data[1];
                     console.log('User:', user_data);
-                    Promise.all(urls.map(url => fetch(url).then(response => response.text())))
+                    Promise.all(urls.map(url => fetch4(url)))
                         .then(responses => {
                             responses.forEach((data, index) => {
                                 switch (index) {
                                     case 0:
-                                        console.log('fav:', data);
-                                        // Handle favorite themes response data here
+                                        // FAVORITES
+                                        // console.debug(data);
+                                        this.favorites = [];
+                                        let lines = data.split(/\r\n|\n/);
+                                        lines.forEach(line => {
+                                            if (line == "") return;
+                                            let theme = new FavoriteTheme(line);
+                                            // console.log(theme);
+                                            this.favorites.push(theme);
+                                        });
+                                        // console.debug('Favorites:', this.favorites);
                                         break;
                                     case 1:
                                         console.log('QMS:', data);
@@ -99,30 +105,34 @@ function open_url(url) {
 
 // Listen for messages from popup or other extension parts
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.action === 'popup_loaded') {
-        sendResponse({
-            user_id: bg.user_id,
-            user_name: bg.user_name
-        });
-    } else if (message.action === 'open_url') {
-        let url = 'https://4pda.to/forum/index.php?';
-        switch (message.what) {
-            case 'user':
-                url += 'showuser=' + bg.user_id;
-                break;
-            case 'qms':
-                url += 'act=qms';
-                break;
-            case 'favorites':
-                url += 'act=fav';
-                break;
-            case 'mentions':
-                url += 'act=mentions';
-                break;
-            default:
-                return true;
-        }
-        open_url(url);
+    switch (message.action) {
+        case 'popup_loaded':
+            sendResponse({
+                user_id: bg.user_id,
+                user_name: bg.user_name,
+                favorites: bg.favorites
+            });
+            break;
+        case 'open_url':
+            let url = 'https://4pda.to/forum/index.php?';
+            switch (message.what) {
+                case 'user':
+                    url += 'showuser=' + bg.user_id;
+                    break;
+                case 'qms':
+                    url += 'act=qms';
+                    break;
+                case 'favorites':
+                    url += 'act=fav';
+                    break;
+                case 'mentions':
+                    url += 'act=mentions';
+                    break;
+                default:
+                    return true;
+            }
+            open_url(url);
+            break;
     }
     // Return true if you want to send a response asynchronously
     return true;
