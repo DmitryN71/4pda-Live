@@ -19,6 +19,7 @@ export function parse_response(str) {
  * @returns {string} 
  */
 export function decode_special_chars(string) {
+    // todo
     // let txt = document.createElement("textarea");
     // txt.innerHTML = string;
     // return txt.value
@@ -40,7 +41,7 @@ export function fetch4(url) {
                 return response.arrayBuffer()
                     .then(buffer => decoder.decode(buffer));
             } else {
-                throw 'Bad request: ' + response.status;
+                throw `Bad request: ${response.status} ${response.statusText}; ${url}`;
             }
         })
 }

@@ -1,5 +1,6 @@
 import { parse_response, fetch4 } from "./utils.js";
 import { FavoriteTheme } from "./fav.js";
+import { print_count, print_logout, print_unavailable } from "./browser.js";
 
       
 const urls = [
@@ -24,24 +25,22 @@ export class CS {
         if (this.#initialized) {
             return;
         }
-        this.update();
-        chrome.alarms.create('periodicApiCheck', {
-            periodInMinutes: PERIOD_MINUTES
-        });
+        this.update_all_data();
+        // chrome.alarms.create('periodicApiCheck', {
+        //     periodInMinutes: PERIOD_MINUTES
+        // });
 
         this.#initialized = true;
     }
 
-    update() {
-        console.debug('Update:', new Date());
-
+    update_all_data() {
         fetch4('https://4pda.to/forum/index.php?act=inspector&CODE=id')
             .then(data => {
                 let user_data = parse_response(data);
                 if (user_data && user_data.length == 2) {
                     this.user_id = parseInt(user_data[0]);
                     this.user_name = user_data[1];
-                    console.log('User:', user_data);
+                    console.debug('User:', user_data);
                     Promise.all(urls.map(url => fetch4(url)))
                         .then(responses => {
                             responses.forEach((data, index) => {
@@ -57,7 +56,9 @@ export class CS {
                                             // console.log(theme);
                                             this.favorites.push(theme);
                                         });
-                                        // console.debug('Favorites:', this.favorites);
+                                        console.debug('Favorites:', this.favorites.length);
+                                        // todo: action print count
+                                        print_count(0, this.favorites.length);
                                         break;
                                     case 1:
                                         console.log('QMS:', data);
@@ -74,11 +75,18 @@ export class CS {
                             console.error('Error fetching API data:', error);
                         });
                 } else {
-                    throw 'Bad user request';
+                    print_logout();
+                    // throw 'Bad user request';
                 }
             })
             .catch(error => {
+                print_unavailable();
                 console.error('API request failed:', error);
             });
+    }
+
+    update() {
+        console.debug('Update:', new Date());
+        // todo: check UserID & request_last_event
     }
 }
