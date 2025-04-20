@@ -9,6 +9,8 @@ const urls = [
     'https://4pda.to/forum/index.php?act=inspector&CODE=mentions-list',
 ];
 const PERIOD_MINUTES = 0.5;
+const PARSE_APPBK_REGEXP = /u\d+:\d+:\d+:(\d+)/;
+
 
 export class CS {
     #initialized;
@@ -19,6 +21,7 @@ export class CS {
         this.user_id = 0;
         this.user_name;
         this.favorites = [];
+        this.last_event = 0;
     }
 
     init() {
@@ -26,9 +29,9 @@ export class CS {
             return;
         }
         this.update_all_data();
-        // chrome.alarms.create('periodicApiCheck', {
-        //     periodInMinutes: PERIOD_MINUTES
-        // });
+        chrome.alarms.create('periodicApiCheck', {
+            periodInMinutes: PERIOD_MINUTES
+        });
 
         this.#initialized = true;
     }
@@ -87,6 +90,24 @@ export class CS {
 
     update() {
         console.debug('Update:', new Date());
-        // todo: check UserID & request_last_event
+        let url = `https://appbk.4pda.to/er/u${this.user_id}/s${this.last_event}`;
+        fetch(url)
+            .then(response => response.text())
+            .then(data => {
+                // console.debug(data);
+                if (data) {
+                    let parsed = data.match(PARSE_APPBK_REGEXP);
+                    if (parsed) {
+                        console.debug('Has new events');
+                        this.last_event = parsed[1];
+                        // todo update all
+                    }
+                } // else: no new events
+                // todo print action
+            })
+            .catch(error => {
+                console.error('Error fetching API data:', error);
+                print_unavailable();
+            });
     }
 }
