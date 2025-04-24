@@ -2,7 +2,7 @@ import {parse_response, decode_special_chars, fetch4} from '../utils.js';
 
 
 export class Favorites {
-    #list = {};
+    #list;
 
     constructor(cs) {
         this.cs = cs;
@@ -26,6 +26,7 @@ export class Favorites {
                 lines.forEach((line, idx) => {
                     if (line == "") return;
                     let theme = new FavoriteTheme(line, idx);
+                    new_list[theme.id] = theme;
                     if (theme.id in this.#list) {
                         let current_theme = this.#list[theme.id];
                         if (current_theme.last_post_ts < theme.last_post_ts) {
@@ -38,7 +39,6 @@ export class Favorites {
                         console.debug('new_theme:', theme.id, theme.title);
                         // inspector.notifications.add('new_theme', theme);
                     }
-                    new_list[theme.id] = theme;
                 });
                 this.#list = new_list;
                 console.debug('Favorites:', this.count);

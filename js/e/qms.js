@@ -2,25 +2,42 @@ import { fetch4, parse_response, decode_special_chars } from "../utils.js";
 
 
 export class QMS {
+    #list;
+
     constructor(cs) {
         this.cs = cs;
+        this.#list = {};
     }
 
     get count() {
-        return 0;
+        return Object.keys(this.#list).length;
     }
 
     async update() {
         return fetch4('https://4pda.to/forum/index.php?act=inspector&CODE=qms')
             .then(data => {
                 console.debug('QMS:', data);
-                let lines = data.split(/\r\n|\n/);
+                let lines = data.split(/\r\n|\n/),
+                    new_list = {};
                 lines.forEach(line => {
                     if (line == "") return;
                     console.debug('QMS dialog:', line);
                     let dialog = new Dialog(line);
-                    // todo
+                    new_list[dialog.id] = dialog;
+                    if (dialog.id in this.#list) {
+                        let current_dialog = this.#list[dialog.id];
+                        if (current_dialog.last_msg_ts < dialog.last_msg_ts) {
+                            console.debug('new_message_in_dialog:', dialog.opponent_name, dialog.title);
+                            // inspector.notifications.add('new_message_in_dialog', dialog);
+                        } else {
+                            return;
+                        }
+                    } else {
+                        console.debug('new_dialog:', dialog.opponent_name, dialog.title);
+                        // inspector.notifications.add('new_dialog', dialog);
+                    }
                 });
+                this.#list = new_list;
             });
     }
 }

@@ -98,7 +98,10 @@ export class CS {
             this.mentions.update()
         ]).then(() => {
             console.debug('All updated');
-            print_count(0, this.favorites.count);
+            print_count(
+                this.qms.count,
+                this.favorites.count
+            );
         }).catch(error => {
             console.error('Error updating user data:', error);
             print_unavailable();
