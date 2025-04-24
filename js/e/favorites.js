@@ -20,7 +20,6 @@ export class Favorites {
     async update() {
         return fetch4('https://4pda.to/forum/index.php?act=inspector&CODE=fav')
             .then(data => {
-                this.#list = {};
                 let lines = data.split(/\r\n|\n/);
                 lines.forEach(line => {
                     if (line == "") return;
@@ -29,7 +28,7 @@ export class Favorites {
                         let current_theme = this.#list[theme.id];
                         if (current_theme.last_post_ts < theme.last_post_ts) {
                             console.debug('new_comment_in_theme:', theme.id, theme.title);
-                            // inspector.notifications.add('new_theme', theme);
+                            // inspector.notifications.add('new_comment_in_theme', theme);
                         } else {
                             return;
                         }
@@ -37,7 +36,6 @@ export class Favorites {
                         console.debug('new_theme:', theme.id, theme.title);
                         // inspector.notifications.add('new_theme', theme);
                     }
-
                     this.#list[theme.id] = theme;
                 });
                 console.debug('Favorites:', this.count);

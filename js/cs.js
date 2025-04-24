@@ -62,7 +62,6 @@ export class CS {
                     }                    
                 } else {
                     print_logout();
-                    throw 'Bad user request';
                 }
             })
             .catch(error => {

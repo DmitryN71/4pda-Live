@@ -5,6 +5,7 @@ const decoder = new TextDecoder('windows-1251');
 
 export function parse_response(str) {
     let parsed = str.match(PARSE_STRING_REGEXP);
+    if (!parsed) return [];
     for (let i = 0; i < parsed.length; i++) {
         let pq = parsed[i].match(/"(.*)"/);
         if (pq) {
