@@ -45,3 +45,9 @@ export function fetch4(url) {
             }
         })
 }
+
+export function open_url(url) {
+    chrome.tabs.create({
+        url: url
+    });
+}

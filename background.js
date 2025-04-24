@@ -1,5 +1,6 @@
 // background.js - Chrome Extension MV3 Service Worker
 import {CS} from './js/cs.js';
+import {open_url} from './js/utils.js';
 
 
 const bg = new CS();
@@ -12,6 +13,7 @@ chrome.runtime.onInstalled.addListener(() => {
 // Also set up the alarm if the service worker starts (in case of reload)
 chrome.runtime.onStartup.addListener(() => {
     console.debug('onStartup');
+    bg.init();
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
@@ -19,12 +21,6 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         bg.update();
     }
 });
-
-function open_url(url) {
-    chrome.tabs.create({
-        url: url
-    });
-}
 
 // Listen for messages from popup or other extension parts
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
