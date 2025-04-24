@@ -63,7 +63,7 @@ function add_theme_row(theme) {
     
     tpl_caption.textContent = theme.title;
     tpl_last_user.textContent = theme.last_user_name;
-    tpl_last_dt.textContent = theme.last_post_dt;
+    tpl_last_dt.textContent = new Date(theme.last_post_ts*1000).toLocaleString();
 
     elements.themesList.appendChild(tpl);
 }
