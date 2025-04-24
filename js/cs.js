@@ -1,13 +1,10 @@
 import { parse_response, fetch4 } from "./utils.js";
-import { FavoriteTheme } from "./fav.js";
+import { Favorites } from "./e/favorites.js";
+import { Mentions } from "./e/mentions.js";
+import { QMS } from "./e/qms.js";
 import { print_count, print_logout, print_unavailable } from "./browser.js";
 
-      
-const urls = [
-    'https://4pda.to/forum/index.php?act=inspector&CODE=fav',
-    'https://4pda.to/forum/index.php?act=inspector&CODE=qms',
-    'https://4pda.to/forum/index.php?act=inspector&CODE=mentions-list',
-];
+
 const PERIOD_MINUTES = 0.5;
 const PARSE_APPBK_REGEXP = /u\d+:\d+:\d+:(\d+)/;
 
@@ -22,7 +19,9 @@ export class CS {
         this.user_name;
         this.last_event = 0;
 
-        this.favorites = [];
+        this.favorites = new Favorites(this);
+        this.qms = new QMS(this);
+        this.mentions = new Mentions(this);
     }
 
     init() {
@@ -35,6 +34,14 @@ export class CS {
         });
 
         this.#initialized = true;
+    }
+
+    get popup_data() {
+        return {
+            user_id: this.user_id,
+            user_name: this.user_name,
+            favorites: this.favorites.list
+        };
     }
 
     async update() {
@@ -86,38 +93,16 @@ export class CS {
     }
 
     async #update_user_data() {
-        return Promise.all(urls.map(url => fetch4(url)))
-            .then(responses => {
-                responses.forEach((data, index) => {
-                    switch (index) {
-                        case 0:
-                            // FAVORITES
-                            // console.debug(data);
-                            this.favorites = [];
-                            let lines = data.split(/\r\n|\n/);
-                            lines.forEach(line => {
-                                if (line == "") return;
-                                let theme = new FavoriteTheme(line);
-                                // console.log(theme);
-                                this.favorites.push(theme);
-                            });
-                            console.debug('Favorites:', this.favorites.length);
-                            // todo: action print count
-                            print_count(0, this.favorites.length);
-                            break;
-                        case 1:
-                            console.log('QMS:', data);
-                            // Handle qms response data here
-                            break;
-                        case 2:
-                            console.log('mentions', data);
-                            // Handle mentions response data here
-                            break;
-                    }
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching API data:', error);
-            });
+        return Promise.all([
+            this.favorites.update(),
+            this.qms.update(),
+            this.mentions.update()
+        ]).then(() => {
+            console.debug('All updated');
+            print_count(0, this.favorites.count);
+        }).catch(error => {
+            console.error('Error updating user data:', error);
+            print_unavailable();
+        });
     }
 }

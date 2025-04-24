@@ -26,11 +26,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     switch (message.action) {
         case 'popup_loaded':
-            sendResponse({
-                user_id: bg.user_id,
-                user_name: bg.user_name,
-                favorites: bg.favorites
-            });
+            sendResponse(bg.popup_data);
             break;
         case 'open_url':
             let url = 'https://4pda.to/forum/index.php?';
