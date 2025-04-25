@@ -38,6 +38,18 @@ export class Favorites {
                     } else {
                         console.debug('new_theme:', theme.id, theme.title);
                         // inspector.notifications.add('new_theme', theme);
+                        /*chrome.notifications.create(
+                            `${theme.last_post_ts}/theme/${theme.id}`
+                        , {
+                            'contextMessage': 'Новый комментарий',
+                            'title': theme.title,
+                            'message': theme.last_user_name,
+                            'eventTime': theme.last_post_ts*1000,
+                            'iconUrl': 'img/icons/icon_80_favorite.png',
+                            'type': 'basic'
+                        }, notificationId => {
+                            console.debug('notification_created', notificationId);
+                        })*/
                     }
                 });
                 this.#list = new_list;

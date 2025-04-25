@@ -52,3 +52,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // Return true if you want to send a response asynchronously
     return true;
 });
+
+chrome.notifications.onClicked.addListener(notificationId => {
+    console.debug('notification_click', notificationId);
+});    

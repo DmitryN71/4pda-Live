@@ -12,7 +12,8 @@
         "type": "module"
 	},
 	"permissions": [
-		"alarms"
+		"alarms",
+		"notifications"
 	],
 	"host_permissions": [
 		"https://4pda.to/"
