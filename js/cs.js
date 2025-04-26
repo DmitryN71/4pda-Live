@@ -34,17 +34,6 @@ export class CS {
         });
 
         this.#initialized = true;
-
-        // https://developer.chrome.com/docs/extensions/reference/api/notifications#type-NotificationOptions
-        let not_id = new Date().getTime()
-        chrome.notifications.create(
-            `${not_id}_init_${this.user_id}`
-        , {
-            'title': 'title',
-            'message': 'message',
-            'iconUrl': 'img/icons/icon_80.png',
-            'type': 'basic'
-        })
     }
 
     get popup_data() {

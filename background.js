@@ -53,6 +53,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
 });
 
+// https://developer.chrome.com/docs/extensions/reference/api/notifications#type-NotificationOptions
 chrome.notifications.onClicked.addListener(notificationId => {
     console.debug('notification_click', notificationId);
-});    
+});

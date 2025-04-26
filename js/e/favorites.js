@@ -31,31 +31,18 @@ export class Favorites {
                         let current_theme = this.#list[theme.id];
                         if (current_theme.last_post_ts < theme.last_post_ts) {
                             console.debug('new_comment_in_theme:', theme.id, theme.title);
-                            // inspector.notifications.add('new_comment_in_theme', theme);
+                            theme.notification();
                         } else {
                             return;
                         }
                     } else {
                         console.debug('new_theme:', theme.id, theme.title);
-                        // inspector.notifications.add('new_theme', theme);
-                        /*chrome.notifications.create(
-                            `${theme.last_post_ts}/theme/${theme.id}`
-                        , {
-                            'contextMessage': 'Новый комментарий',
-                            'title': theme.title,
-                            'message': theme.last_user_name,
-                            'eventTime': theme.last_post_ts*1000,
-                            'iconUrl': 'img/icons/icon_80_favorite.png',
-                            'type': 'basic'
-                        }, notificationId => {
-                            console.debug('notification_created', notificationId);
-                        })*/
+                        theme.notification();
                     }
                 });
                 this.#list = new_list;
                 console.debug('Favorites:', this.count);
             });
-
     }
 }
 
@@ -73,5 +60,20 @@ export class FavoriteTheme {
         this.pin = (obj[7] == "1");
         // this.viewed = false;
         this.sort_idx = sort_idx;
+    }
+
+    notification(){
+        return chrome.notifications.create(
+            `${this.last_post_ts}/theme/${this.id}`
+        , {
+            'contextMessage': 'Новый комментарий',
+            'title': this.title,
+            'message': this.last_user_name,
+            'eventTime': this.last_post_ts*1000,
+            'iconUrl': 'img/icons/icon_80_favorite.png',
+            'type': 'basic'
+        }/*, notificationId => {
+            console.debug('notification_created', notificationId);
+        }*/);
     }
 }
