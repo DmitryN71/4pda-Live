@@ -95,31 +95,18 @@ export class CS {
                     if (parsed) {
                         console.debug('Has new events');
                         this.last_event = parsed[1];
-                        // todo update all
-                        return this.#update_user_data();
+                        return Promise.all([
+                            this.favorites.update(),
+                            this.qms.update(),
+                            this.mentions.update()
+                        ]).then(() => {
+                            print_count(
+                                this.qms.count,
+                                this.favorites.count
+                            );
+                        });
                     }
                 } // else: no new events
-                // todo print action
-            })
-            .catch(error => {
-                console.error('Error fetching API data:', error);
-                print_unavailable();
             });
-    }
-
-    async #update_user_data() {
-        return Promise.all([
-            this.favorites.update(),
-            this.qms.update(),
-            this.mentions.update()
-        ]).then(() => {
-            print_count(
-                this.qms.count,
-                this.favorites.count
-            );
-        }).catch(error => {
-            console.error('Error updating user data:', error);
-            print_unavailable();
-        });
     }
 }
