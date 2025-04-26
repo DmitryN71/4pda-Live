@@ -52,9 +52,6 @@ class Mention {
         let obj = parse_response(text_line)
 
         this.from = parseInt(obj[0]) // 0 = forum, 1 = site
-        // if (this.from !== 0) {
-        //     throw 'Mention: Bad from'
-        // }
         this.topic_id = obj[1]; //or post_id
         this.post_id = obj[2]; //or comment_id
         this.title = decode_special_chars(obj[3])
@@ -70,7 +67,6 @@ class Mention {
     notification() {
         return chrome.notifications.create(
             `${this.timestamp}/mention/${this.key}`
-            //`${this.timestamp}_${this.topic_id}_${this.post_id}`
         , {
             'contextMessage': 'Новое упоминание',
             'title': this.title,

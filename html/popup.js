@@ -88,7 +88,7 @@ function add_theme_row(theme) {
                 action: 'open_url',
                 what: 'favorites',
                 id: theme.id,
-                type: 'last'
+                view: 'getlastpost'
             }).then(() => {
                 tpl.classList.add(CLASS_THEME_USED);
             });

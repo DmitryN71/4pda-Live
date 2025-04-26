@@ -35,7 +35,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 case 'qms':
                     return bg.qms.open();
                 case 'favorites':
-                    return bg.favorites.open();
+                    return bg.favorites.open(message['id'], message['view']);
                 case 'mentions':
                     return bg.mentions.open();
             }

@@ -46,10 +46,10 @@ export class Favorites {
             });
     }
 
-    open(id) {
+    open(id, view) {
         if (id) {
             let theme = this.#list[id];
-            return theme.open();
+            return theme.open(view);
         } else {
             return open_url('https://4pda.to/forum/index.php?act=fav');
         }
@@ -87,7 +87,8 @@ export class FavoriteTheme {
         }*/);
     }
 
-    open() {
-        return open_url(`https://4pda.to/forum/index.php?showtopic=${this.id}&view=getnewpost`);
+    open(view) {
+        view = view || 'getnewpost';
+        return open_url(`https://4pda.to/forum/index.php?showtopic=${this.id}&view=${view}`);
     }
 }
