@@ -1,4 +1,3 @@
-import { decode_special_chars } from '../utils.js';
 import { open_url } from '../browser.js';
 import { AbstractEntity } from './abstract.js';
 
@@ -32,13 +31,13 @@ export class Favorites extends AbstractEntity {
 export class FavoriteTheme {
     constructor(obj) {
         this.id = obj[0];
-        this.title = decode_special_chars(obj[1]);
+        this.title = obj[1];
         // this.posts_num = obj[2];
         // this.last_user_id = obj[3];
-        this.last_user_name = decode_special_chars(obj[4]);
+        this.last_user_name = obj[4];
         this.last_post_ts = obj[5];
         // this.last_read_ts = obj[6];
-        this.pin = (obj[7] == "1");
+        this.pin = (obj[7] == 1);
         // this.viewed = false;
     }
 

@@ -1,34 +1,32 @@
-const PARSE_STRING_REGEXP = /([^\s"']+|"([^"]*)"|'([^']*)')/g
+const PARSE_STRING_REGEXP = /([^\s"']+|"([^"]*)"|'([^']*)')/g;
+const PARSE_STRING_QUOTES = /"(.*)"/;
 
 const decoder = new TextDecoder('windows-1251');
 
 
 export function parse_response(str) {
-    let parsed = str.match(PARSE_STRING_REGEXP);
-    if (!parsed) return [];
-    for (let i = 0; i < parsed.length; i++) {
-        let pq = parsed[i].match(/"(.*)"/);
-        if (pq) {
-            parsed[i] = pq[1];
-        }
-    }
-    return parsed;
+    return str.match(PARSE_STRING_REGEXP).map(p => {
+        let pq = p.match(PARSE_STRING_QUOTES);
+        if (pq) return decode_special_chars(pq[1]);
+        return parseInt(p, 10);
+    });
 }
 
 /**
  * @param {string} string 
  * @returns {string} 
  */
-export function decode_special_chars(string) {
-    // todo
-    // let txt = document.createElement("textarea");
-    // txt.innerHTML = string;
-    // return txt.value
+function decode_special_chars(string) {
     return string.replace(/&quot;/g, '"')
         .replace(/&apos;/g, "'")
         .replace(/&amp;/g, '&')
         .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>');
+        .replace(/&gt;/g, '>')
+        .replace(/&#(x?)([0-9A-Fa-f]+);/g, function(match, isHex, num) {
+            return String.fromCodePoint(
+                parseInt(num, isHex ? 16 : 10)
+            );
+        });
 }
 
 

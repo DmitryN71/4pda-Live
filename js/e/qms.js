@@ -1,4 +1,3 @@
-import { decode_special_chars } from "../utils.js";
 import { open_url } from '../browser.js';
 import { AbstractEntity } from "./abstract.js";
 
@@ -28,12 +27,12 @@ class Dialog {
 
     constructor(obj) {
         this.id = obj[0];
-        this.title = decode_special_chars(obj[1]);
+        this.title = obj[1];
         this.opponent_id = obj[2];
-        this.opponent_name = decode_special_chars(obj[3]);
+        this.opponent_name = obj[3];
         this.last_msg_ts = obj[4];
-        this.unread_msgs = obj[5];
-        this.last_msg_id = obj[6];
+        // this.unread_msgs = obj[5];
+        // this.last_msg_id = obj[6];
     }
 
     notification() {

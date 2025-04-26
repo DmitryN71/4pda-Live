@@ -1,4 +1,3 @@
-import { decode_special_chars } from "../utils.js";
 import { open_url } from '../browser.js';
 import { AbstractEntity } from "./abstract.js";
 
@@ -22,13 +21,13 @@ export class Mentions extends AbstractEntity {
 class Mention {
 
     constructor(obj) {
-        this.from = parseInt(obj[0]) // 0 = forum, 1 = site
+        this.from = obj[0] // 0 = forum, 1 = site
         this.topic_id = obj[1]; //or post_id
         this.post_id = obj[2]; //or comment_id
-        this.title = decode_special_chars(obj[3])
+        this.title = obj[3]
         this.timestamp = obj[4]
         //this.poster_id = obj[5]
-        this.poster_name = decode_special_chars(obj[6])
+        this.poster_name = obj[6]
     }
 
     get id() {
