@@ -35,9 +35,9 @@ export function decode_special_chars(string) {
 let myHeaders = new Headers();
 myHeaders.append('Content-Type','text/plain; charset=windows-1251');
 
-export function fetch4(url) {
+export async function fetch4(url) {
     return fetch(url, myHeaders)
-        .then(response => {
+        .then(async response => {
             if (response.ok) {
                 return response.arrayBuffer()
                     .then(buffer => decoder.decode(buffer));
@@ -45,10 +45,4 @@ export function fetch4(url) {
                 throw `Bad request: ${response.status} ${response.statusText}; ${url}`;
             }
         })
-}
-
-export function open_url(url) {
-    chrome.tabs.create({
-        url: url
-    });
 }

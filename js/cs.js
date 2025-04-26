@@ -22,10 +22,12 @@ export class CS {
         this.favorites = new Favorites(this);
         this.qms = new QMS(this);
         this.mentions = new Mentions(this);
+
+        this.notify = false;
     }
 
     init() {
-        console.debug('init CS', this.#initialized, new Date());
+        console.debug('Init CS', this.#initialized, new Date());
         if (this.#initialized) return;
 
         this.update();
@@ -58,11 +60,16 @@ export class CS {
                         this.user_name = user_data[1];
                         console.debug('New user:', this.user_id, this.user_name);
                         this.last_event = 0;
+                        this.notify = false;
                         return this.#update();
                     }                    
                 } else {
                     print_logout();
                 }
+            })
+            .then(() => {
+                console.debug('Update done');
+                this.notify = true;
             })
             .catch(error => {
                 print_unavailable();
@@ -80,7 +87,7 @@ export class CS {
                         console.debug('Has new events');
                         this.last_event = parsed[1];
                         // todo update all
-                        this.#update_user_data();
+                        return this.#update_user_data();
                     }
                 } // else: no new events
                 // todo print action
@@ -97,7 +104,6 @@ export class CS {
             this.qms.update(),
             this.mentions.update()
         ]).then(() => {
-            console.debug('All updated');
             print_count(
                 this.qms.count,
                 this.favorites.count

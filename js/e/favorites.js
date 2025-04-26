@@ -31,13 +31,13 @@ export class Favorites {
                         let current_theme = this.#list[theme.id];
                         if (current_theme.last_post_ts < theme.last_post_ts) {
                             console.debug('new_comment_in_theme:', theme.id, theme.title);
-                            theme.notification();
+                            if (this.cs.notify) theme.notification();
                         } else {
                             return;
                         }
                     } else {
                         console.debug('new_theme:', theme.id, theme.title);
-                        theme.notification();
+                        if (this.cs.notify) theme.notification();
                     }
                 });
                 this.#list = new_list;

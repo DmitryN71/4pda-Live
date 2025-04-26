@@ -1,6 +1,6 @@
 // background.js - Chrome Extension MV3 Service Worker
 import {CS} from './js/cs.js';
-import {open_url} from './js/utils.js';
+import {open_url} from './js/browser.js';
 
 
 const bg = new CS();
