@@ -42,7 +42,16 @@ export class CS {
         return {
             user_id: this.user_id,
             user_name: this.user_name,
-            favorites: this.favorites.list
+            favorites: {
+                count: this.favorites.count,
+                list: this.favorites.list
+            },
+            qms: {
+                count: this.qms.count
+            },
+            mentions: {
+                count: this.mentions.count
+            }
         };
     }
 

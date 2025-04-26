@@ -29,28 +29,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             sendResponse(bg.popup_data);
             break;
         case 'open_url':
-            let url = 'https://4pda.to/forum/index.php?';
             switch (message.what) {
                 case 'user':
-                    url += 'showuser=' + bg.user_id;
-                    break;
+                    return open_url(`https://4pda.to/forum/index.php?showuser=${bg.user_id}`);
                 case 'qms':
-                    url += 'act=qms';
-                    break;
+                    return bg.qms.open();
                 case 'favorites':
-                    url += 'act=fav';
-                    break;
+                    return bg.favorites.open();
                 case 'mentions':
-                    url += 'act=mentions';
-                    break;
-                default:
-                    return true;
+                    return bg.mentions.open();
             }
-            open_url(url);
             break;
     }
     // Return true if you want to send a response asynchronously
-    return true;
+    //return true;
 });
 
 // https://developer.chrome.com/docs/extensions/reference/api/notifications#type-NotificationOptions
