@@ -1,4 +1,5 @@
 import { fetch4, parse_response, decode_special_chars } from "../utils.js";
+import {open_url} from '../browser.js';
 
 
 export class Mentions {
@@ -34,6 +35,15 @@ export class Mentions {
                 this.#list = new_list;
             });
     }
+    
+    open(id) {
+        if (id) {
+            let mention = this.#list[id];
+            return mention.open();
+        } else {
+            return open_url('https://4pda.to/forum/index.php?act=mentions');
+        }
+    }
 }
 
 class Mention {
@@ -59,7 +69,7 @@ class Mention {
 
     notification() {
         return chrome.notifications.create(
-            `${this.timestamp}/mention/${this.topic_id}`
+            `${this.timestamp}/mention/${this.key}`
             //`${this.timestamp}_${this.topic_id}_${this.post_id}`
         , {
             'contextMessage': 'Новое упоминание',
@@ -69,6 +79,10 @@ class Mention {
             'iconUrl': 'img/icons/icon_80_mention.png',
             'type': 'basic'
         });
+    }
+
+    open() {
+        return open_url(`https://4pda.to/forum/index.php?showtopic=${this.topic_id}&view=findpost&p=${this.post_id}`);
     }
 
 }

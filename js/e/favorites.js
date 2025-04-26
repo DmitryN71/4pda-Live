@@ -1,4 +1,5 @@
 import {parse_response, decode_special_chars, fetch4} from '../utils.js';
+import {open_url} from '../browser.js';
 
 
 export class Favorites {
@@ -44,6 +45,15 @@ export class Favorites {
                 console.debug('Favorites:', this.count);
             });
     }
+
+    open(id) {
+        if (id) {
+            let theme = this.#list[id];
+            return theme.open();
+        } else {
+            return open_url('https://4pda.to/forum/index.php?act=fav');
+        }
+    }
 }
 
 
@@ -75,5 +85,9 @@ export class FavoriteTheme {
         }/*, notificationId => {
             console.debug('notification_created', notificationId);
         }*/);
+    }
+
+    open() {
+        return open_url(`https://4pda.to/forum/index.php?showtopic=${this.id}&view=getnewpost`);
     }
 }

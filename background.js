@@ -56,4 +56,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 // https://developer.chrome.com/docs/extensions/reference/api/notifications#type-NotificationOptions
 chrome.notifications.onClicked.addListener(notificationId => {
     console.debug('notification_click', notificationId);
+    const n_data = notificationId.split('/');
+    switch (n_data[1]) {
+        case 'theme':
+            bg.favorites.open(n_data[2]);
+            break;
+        case 'dialog':
+            bg.qms.open(n_data[2]);
+            break;
+        case 'mention':
+            bg.mentions.open(n_data[2]);
+            break;
+    }
 });

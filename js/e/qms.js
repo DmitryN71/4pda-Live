@@ -1,4 +1,5 @@
 import { fetch4, parse_response, decode_special_chars } from "../utils.js";
+import {open_url} from '../browser.js';
 
 
 export class QMS {
@@ -40,6 +41,15 @@ export class QMS {
                 this.#list = new_list;
             });
     }
+
+    open(id) {
+        if (id) {
+            let dialog = this.#list[id];
+            return dialog.open();
+        } else {
+            return open_url('https://4pda.to/forum/index.php?act=qms');
+        }
+    }
 }
 
 class Dialog {
@@ -67,5 +77,9 @@ class Dialog {
             'iconUrl': 'img/icons/icon_80_message.png',
             'type': 'basic'
         });
+    }
+
+    open() {
+        return open_url(`https://4pda.to/forum/index.php?act=qms&mid=${this.opponent_id}&t=${this.id}`);
     }
 }

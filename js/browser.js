@@ -45,8 +45,8 @@ export function print_count(q_count, f_count) {
 }
 
 
-export function open_url(url) {
-    chrome.tabs.create({
+export async function open_url(url) {
+    return chrome.tabs.create({
         url: url
     });
 }
