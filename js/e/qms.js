@@ -28,13 +28,13 @@ export class QMS {
                         let current_dialog = this.#list[dialog.id];
                         if (current_dialog.last_msg_ts < dialog.last_msg_ts) {
                             console.debug('new_message_in_dialog:', dialog.opponent_name, dialog.title);
-                            // inspector.notifications.add('new_message_in_dialog', dialog);
+                            dialog.notification();
                         } else {
                             return;
                         }
                     } else {
                         console.debug('new_dialog:', dialog.opponent_name, dialog.title);
-                        // inspector.notifications.add('new_dialog', dialog);
+                        dialog.notification();
                     }
                 });
                 this.#list = new_list;
@@ -54,5 +54,18 @@ class Dialog {
         this.last_msg_ts = obj[4]
         this.unread_msgs = obj[5]
         this.last_msg_id = obj[6]
+    }
+
+    notification() {
+        return chrome.notifications.create(
+            `${this.last_msg_ts}/dialog/${this.id}`
+        , {
+            'contextMessage': 'Новое сообщение',
+            'title': this.title,
+            'message': this.opponent_name,
+            'eventTime': this.last_msg_ts*1000,
+            'iconUrl': 'img/icons/icon_80_message.png',
+            'type': 'basic'
+        });
     }
 }
