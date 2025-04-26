@@ -1,62 +1,32 @@
-import { fetch4, parse_response, decode_special_chars } from "../utils.js";
-import {open_url} from '../browser.js';
+import { decode_special_chars } from "../utils.js";
+import { open_url } from '../browser.js';
+import { AbstractEntity } from "./abstract.js";
 
 
-export class QMS {
-    #list;
+export class QMS extends AbstractEntity {
+    ACT_CODE_API = 'qms';
+    ACT_CODE_FORUM = 'qms';
 
-    constructor(cs) {
-        this.cs = cs;
-        this.#list = {};
-    }
+    process_line(line) {
+        let dialog = new Dialog(line),
+            current_dialog = this.get[dialog.id];
 
-    get count() {
-        return Object.keys(this.#list).length;
-    }
-
-    async update() {
-        return fetch4('https://4pda.to/forum/index.php?act=inspector&CODE=qms')
-            .then(data => {
-                console.debug('QMS:', data);
-                let lines = data.split(/\r\n|\n/),
-                    new_list = {};
-                lines.forEach(line => {
-                    if (line == "") return;
-                    console.debug('QMS dialog:', line);
-                    let dialog = new Dialog(line);
-                    new_list[dialog.id] = dialog;
-                    if (dialog.id in this.#list) {
-                        let current_dialog = this.#list[dialog.id];
-                        if (current_dialog.last_msg_ts < dialog.last_msg_ts) {
-                            console.debug('new_message_in_dialog:', dialog.opponent_name, dialog.title);
-                            if (this.cs.notify) dialog.notification();
-                        } else {
-                            return;
-                        }
-                    } else {
-                        console.debug('new_dialog:', dialog.opponent_name, dialog.title);
-                        if (this.cs.notify) dialog.notification();
-                    }
-                });
-                this.#list = new_list;
-            });
-    }
-
-    open(id) {
-        if (id) {
-            let dialog = this.#list[id];
-            return dialog.open();
+        if (current_dialog) {
+            if (current_dialog.last_msg_ts < dialog.last_msg_ts) {
+                console.debug('new_message_in_dialog:', dialog.opponent_name, dialog.title);
+                if (this.cs.notify) dialog.notification();
+            }
         } else {
-            return open_url('https://4pda.to/forum/index.php?act=qms');
+            console.debug('new_dialog:', dialog.opponent_name, dialog.title);
+            if (this.cs.notify) dialog.notification();
         }
+        return dialog;
     }
 }
 
 class Dialog {
 
-    constructor(text_line) {
-        let obj = parse_response(text_line);
-
+    constructor(obj) {
         this.id = obj[0];
         this.title = decode_special_chars(obj[1]);
         this.opponent_id = obj[2];

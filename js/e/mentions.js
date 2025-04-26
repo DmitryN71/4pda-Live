@@ -1,72 +1,46 @@
-import { fetch4, parse_response, decode_special_chars } from "../utils.js";
-import {open_url} from '../browser.js';
+import { decode_special_chars } from "../utils.js";
+import { open_url } from '../browser.js';
+import { AbstractEntity } from "./abstract.js";
 
 
-export class Mentions {
-    #list;
+export class Mentions extends AbstractEntity {
+    ACT_CODE_API = 'mentions-list';
+    ACT_CODE_FORUM = 'mentions';
 
-    constructor(cs) {
-        this.cs = cs;
-        this.#list = {};
-    }
+    process_line(line) {
+        let mention = new Mention(line);
+        if (mention.from !== 0) return;
 
-    get count() {
-        return Object.keys(this.#list).length;
-    }
-
-    async update() {
-        return fetch4('https://4pda.to/forum/index.php?act=inspector&CODE=mentions-list')
-            .then(data => {
-                console.debug('Mentions:', data);
-                let lines = data.split(/\r\n|\n/),
-                    new_list = {};
-                lines.forEach(line => {
-                    if (line == "") return;
-                    console.debug('Mention:', line);
-                    let mention = new Mention(line);
-                    if (mention.from !== 0) return;
-
-                    new_list[mention.key] = mention;
-                    if (!(mention.key in this.#list)) {
-                        console.debug('new_mention:', mention.title, mention.poster_name);
-                        if (this.cs.notify) mention.notification();
-                    }
-                });
-                this.#list = new_list;
-            });
-    }
-    
-    open(id) {
-        if (id) {
-            let mention = this.#list[id];
-            return mention.open();
-        } else {
-            return open_url('https://4pda.to/forum/index.php?act=mentions');
+        if (!this.exists(mention.id)) {
+            console.debug('new_mention:', mention.title, mention.poster_name);
+            if (this.notify) mention.notification();
         }
+        return mention;
     }
 }
 
 class Mention {
 
-    constructor(text_line) {
-        let obj = parse_response(text_line)
-
+    constructor(obj) {
         this.from = parseInt(obj[0]) // 0 = forum, 1 = site
         this.topic_id = obj[1]; //or post_id
         this.post_id = obj[2]; //or comment_id
         this.title = decode_special_chars(obj[3])
         this.timestamp = obj[4]
-        this.poster_id = obj[5]
+        //this.poster_id = obj[5]
         this.poster_name = decode_special_chars(obj[6])
     }
 
-    get key() {
-        return `${this.timestamp}_${this.topic_id}_${this.post_id}`
+    get id() {
+        return `${this.topic_id}_${this.post_id}`;
     }
+
+    // deprecated
+    get key() { return this.id; }
 
     notification() {
         return chrome.notifications.create(
-            `${this.timestamp}/mention/${this.key}`
+            `${this.timestamp}/mention/${this.id}`
         , {
             'contextMessage': 'Новое упоминание',
             'title': this.title,

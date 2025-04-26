@@ -1,75 +1,45 @@
-import {parse_response, decode_special_chars, fetch4} from '../utils.js';
-import {open_url} from '../browser.js';
+import { decode_special_chars } from '../utils.js';
+import { open_url } from '../browser.js';
+import { AbstractEntity } from './abstract.js';
 
 
-export class Favorites {
-    #list;
-
-    constructor(cs) {
-        this.cs = cs;
-        this.#list = {};
-    }
+export class Favorites extends AbstractEntity {
+    ACT_CODE_API = 'fav';
+    ACT_CODE_FORUM = 'fav';
 
     get list() {
-        return Object.values(this.#list).sort((a, b) => a.sort_idx - b.sort_idx);
+        return super.list.sort((a, b) => b.last_post_ts - a.last_post_ts);
     }
 
-    get count() {
-        return Object.keys(this.#list).length;
-    }
+    process_line(line) {
+        let theme = new FavoriteTheme(line),
+            current_theme = this.get(theme.id);
 
-    async update() {
-        return fetch4('https://4pda.to/forum/index.php?act=inspector&CODE=fav')
-            .then(data => {
-                let lines = data.split(/\r\n|\n/),
-                    new_list = {};
-
-                lines.forEach((line, idx) => {
-                    if (line == "") return;
-                    let theme = new FavoriteTheme(line, idx);
-                    new_list[theme.id] = theme;
-                    if (theme.id in this.#list) {
-                        let current_theme = this.#list[theme.id];
-                        if (current_theme.last_post_ts < theme.last_post_ts) {
-                            console.debug('new_comment_in_theme:', theme.id, theme.title);
-                            if (this.cs.notify) theme.notification();
-                        } else {
-                            return;
-                        }
-                    } else {
-                        console.debug('new_theme:', theme.id, theme.title);
-                        if (this.cs.notify) theme.notification();
-                    }
-                });
-                this.#list = new_list;
-                console.debug('Favorites:', this.count);
-            });
-    }
-
-    open(id, view) {
-        if (id) {
-            let theme = this.#list[id];
-            return theme.open(view);
+        if (current_theme) {
+            if (current_theme.last_post_ts < theme.last_post_ts) {
+                console.debug('new_comment_in_theme:', theme.id, theme.title);
+                if (this.notify) theme.notification();
+            }
         } else {
-            return open_url('https://4pda.to/forum/index.php?act=fav');
+            console.debug('new_theme:', theme.id, theme.title);
+            if (this.notify) theme.notification();
         }
+        return theme;
     }
+
 }
 
-
 export class FavoriteTheme {
-    constructor(text_line, sort_idx) {
-        let obj = parse_response(text_line);
+    constructor(obj) {
         this.id = obj[0];
         this.title = decode_special_chars(obj[1]);
-        this.posts_num = obj[2];
-        this.last_user_id = obj[3];
+        // this.posts_num = obj[2];
+        // this.last_user_id = obj[3];
         this.last_user_name = decode_special_chars(obj[4]);
         this.last_post_ts = obj[5];
-        this.last_read_ts = obj[6];
+        // this.last_read_ts = obj[6];
         this.pin = (obj[7] == "1");
         // this.viewed = false;
-        this.sort_idx = sort_idx;
     }
 
     notification(){
