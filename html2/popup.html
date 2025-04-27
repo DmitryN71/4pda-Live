@@ -3,39 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Список тем</title>
+    <title>4PDA Inspector Popup</title>
     <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-    <header class="header">
-        <div class="header-left">
-            <div class="header-item header-item-message">
-                <span class="header-icon">12</span>
-            </div>
-            <div class="header-item header-item-mention">
-                <span class="header-icon">7</span>
-            </div>
-            <div class="header-item header-item-star">
-                <span class="header-icon">3</span>
-            </div>
+    <header>
+        <div id="counters">
+            <div class="header-item accent" id="header-qms">12</div>
+            <div class="header-item accent" id="header-favorites">3</div>
+            <div class="header-item" id="header-mention">0</div>
         </div>
-        <div class="header-right">
-            <button class="header-action">Профиль</button>
+        <div id="user-box">
+            <span id="user-name" class="header-item">@username</span>
+            <!-- <button class="header-action">Профиль</button> -->
         </div>
     </header>
-    <main class="main">
+    <main>
         <ul class="topic-list">
-            <li class="topic-item">
+            <li>
                 <div class="topic-title">Заголовок темы 1</div>
-                <div class="topic-message-with-icon"><span class="topic-message">Сообщение темы 1. Краткое описание или последний пост.</span><span class="topic-eye" aria-label="Просмотры"></span></div>
+                <div class="topic-last-info">
+                    <span class="user">username</span>
+                    <span class="date">2023-05-28</span>
+                </div>
             </li>
-            <li class="topic-item favorite">
+            <li class="accent">
                 <div class="topic-title">Заголовок темы 2</div>
-                <div class="topic-message-with-icon"><span class="topic-message">Сообщение темы 2. Краткое описание или последний пост.</span><span class="topic-eye" aria-label="Просмотры"></span></div>
+                <div class="topic-last-info">
+                    <span class="user">username</span>
+                    <span class="date">2023-04-28</span>
+                </div>
             </li>
-            <li class="topic-item">
+            <li>
                 <div class="topic-title">Заголовок темы 3</div>
-                <div class="topic-message-with-icon"><span class="topic-message">Сообщение темы 3. Краткое описание или последний пост.</span><span class="topic-eye" aria-label="Просмотры"></span></div>
+                <div class="topic-last-info">
+                    <span class="user">username</span>
+                    <span class="date">2023-03-20</span>
+                </div>
             </li>
             <!-- ...другие темы... -->
         </ul>
