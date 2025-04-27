@@ -35,9 +35,6 @@ header #counters .header-item {
 header #counters .header-item.accent {
   opacity: 1;
 }
-header #counters .header-item:hover {
-  opacity: 1;
-}
 header #counters .header-item::before {
   content: '';
   mask-repeat: no-repeat;
