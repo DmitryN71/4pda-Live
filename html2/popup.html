@@ -11,7 +11,7 @@
         <div id="counters">
             <div class="header-item accent" id="header-qms">12</div>
             <div class="header-item accent" id="header-favorites">3</div>
-            <div class="header-item" id="header-mention">0</div>
+            <div class="header-item" id="header-mentions">0</div>
         </div>
         <div id="user-box">
             <span id="user-name" class="header-item">@username</span>
@@ -19,30 +19,25 @@
         </div>
     </header>
     <main>
-        <ul class="topic-list">
+        <ul id="topic-list"></ul>
+    </main>
+
+    <div id="templates">
+        <template id="tpl-one-topic">
             <li>
                 <div class="topic-title">Заголовок темы 1</div>
-                <div class="topic-last-info">
-                    <span class="user">username</span>
-                    <span class="date">2023-05-28</span>
+                <div class="topic-last-info tli">
+                    <span class="tli user">username</span>
+                    <span class="tli date">2023-05-28</span>
                 </div>
             </li>
-            <li class="accent">
-                <div class="topic-title">Заголовок темы 2</div>
-                <div class="topic-last-info">
-                    <span class="user">username</span>
-                    <span class="date">2023-04-28</span>
-                </div>
-            </li>
-            <li>
-                <div class="topic-title">Заголовок темы 3</div>
-                <div class="topic-last-info">
-                    <span class="user">username</span>
-                    <span class="date">2023-03-20</span>
-                </div>
-            </li>
-            <!-- ...другие темы... -->
-        </ul>
-    </main>
+        </template>
+
+        <template id="tpl-no-themes">
+            <li>Непрочитанных тем нет</li>
+        </template>
+    </div>
+
+    <script src="popup.js"></script>
 </body>
 </html>

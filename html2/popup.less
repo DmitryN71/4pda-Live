@@ -11,15 +11,18 @@
 @main-accent: #265f5a;
 @main-hover: #35968e;
 @main-gray: #949DB0;
+@main-li-hover: #f0faff;
 
 @transition-time: 0.5s;
-
 
 body {
     font-family: "Segoe UI", "Helvetica Neue", Helvetica, Tahoma, Arial, sans-serif;
     background: @main-bg;
     margin: 0;
     font-size: 14px;
+    min-width: 400px;
+    max-width: 800px;
+    // max-height: 600px;
 }
 
 header {
@@ -78,7 +81,7 @@ header {
         #header-favorites::before {
             mask-image: url('../img/star.svg');
         }
-        #header-mention::before {
+        #header-mentions::before {
             mask-image: url('../img/mention.svg');
         }
     }
@@ -87,7 +90,7 @@ header {
 main {
     // min-height: 100vh;
 
-    ul.topic-list {
+    ul#topic-list {
         list-style: none;
         margin: 0;
         padding: 0;
@@ -96,10 +99,14 @@ main {
             padding: 5px 10px;
             border: none;
             cursor: pointer;
+            transition: background-color @transition-time;
 
             .topic-title {
                 color: @main-text;
                 transition: color @transition-time;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             &.accent {
                 .topic-title {
@@ -118,6 +125,7 @@ main {
             }
 
             &:hover {
+                background-color: @main-li-hover;
                 .topic-title {
                     color: @main-hover;
                 }
@@ -125,7 +133,11 @@ main {
         }
 
         li + li {
-            border-top: 1px solid @main-gray;
+            border-top: 1px solid lighten(@main-gray, 30%);
         }
     }
+}
+
+#templates {
+    display: none;
 }

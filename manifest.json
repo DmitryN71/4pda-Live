@@ -28,6 +28,6 @@
 	"action": {
 		"default_title": "4PDA Инспектор",
 		"default_icon": "img/icons/icon_19_out.png",
-		"default_popup": "html/popup.html"
+		"default_popup": "html2/popup.html"
 	}
 }
