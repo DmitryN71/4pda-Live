@@ -8,8 +8,9 @@ window.onload = () => {
     chrome.runtime.sendMessage(
         {action: 'popup_loaded'},
         (response) => {
-            if (!response.user_id) {
-                console.error('not auth');
+            if (!response) {
+                //console.error('not auth');
+                window.close();
                 return;
             }
             init();

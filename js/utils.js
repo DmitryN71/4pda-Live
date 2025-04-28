@@ -5,6 +5,7 @@ const decoder = new TextDecoder('windows-1251');
 
 
 export function parse_response(str) {
+    if (!str) return null;
     return str.match(PARSE_STRING_REGEXP).map(p => {
         let pq = p.match(PARSE_STRING_QUOTES);
         if (pq) return decode_special_chars(pq[1]);

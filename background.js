@@ -26,8 +26,12 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     switch (message.action) {
         case 'popup_loaded':
-            sendResponse(bg.popup_data);
-            break;
+            if (bg.user_id) {
+                sendResponse(bg.popup_data);
+                break;
+            } else {
+                return open_url('https://4pda.to/forum/index.php?act=auth');
+            }
         case 'open_url':
             switch (message.what) {
                 case 'user':
