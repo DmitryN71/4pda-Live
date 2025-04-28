@@ -73,12 +73,19 @@ export class CS {
                         return this.#update();
                     }                    
                 } else {
+                    this.user_id = 0;
+                    this.user_name = '';
+                    console.debug('Unauthorized');
                     print_logout();
                 }
             })
             .then(() => {
                 console.debug('Update done');
                 this.notify = true;
+                print_count(
+                    this.qms.count,
+                    this.favorites.count
+                );
             })
             .catch(error => {
                 print_unavailable();
@@ -99,12 +106,7 @@ export class CS {
                             this.favorites.update(),
                             this.qms.update(),
                             this.mentions.update()
-                        ]).then(() => {
-                            print_count(
-                                this.qms.count,
-                                this.favorites.count
-                            );
-                        });
+                        ]);
                     }
                 } // else: no new events
             });
