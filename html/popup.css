@@ -71,13 +71,13 @@ main ul#topic-list li {
   transition: background-color 0.5s;
 }
 main ul#topic-list li .topic-title {
-  color: #0072bc;
+  color: #4373c3;
   transition: color 0.5s;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-main ul#topic-list li.accent .topic-title {
+main ul#topic-list li .topic-title.accent {
   color: #265f5a;
 }
 main ul#topic-list li .topic-last-info {
