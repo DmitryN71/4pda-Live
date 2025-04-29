@@ -16,11 +16,11 @@ export class Favorites extends AbstractEntity {
 
         if (current_theme) {
             if (current_theme.last_post_ts < theme.last_post_ts) {
-                console.debug('new_comment_in_theme:', theme.id, theme.title);
+                // console.debug('new_comment_in_theme:', theme.id, theme.title);
                 if (this.notify) theme.notification();
             }
         } else {
-            console.debug('new_theme:', theme.id, theme.title);
+            // console.debug('new_theme:', theme.id, theme.title);
             if (this.notify) theme.notification();
         }
         return theme;

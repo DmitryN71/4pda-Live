@@ -1,23 +1,23 @@
 // background.js - Chrome Extension MV3 Service Worker
-import {CS} from './js/cs.js';
+import {CS, ALARM_NAME} from './js/cs.js';
 import {open_url} from './js/browser.js';
 
 
 const bg = new CS();
 // Set up the alarm when the service worker starts
-chrome.runtime.onInstalled.addListener(() => {
-    console.debug('onInstalled');
+chrome.runtime.onInstalled.addListener(reason => {
+    console.debug('onInstalled', reason);
     bg.init();
 });
 
 // Also set up the alarm if the service worker starts (in case of reload)
-chrome.runtime.onStartup.addListener(() => {
-    console.debug('onStartup');
+chrome.runtime.onStartup.addListener((...args) => {
+    console.debug('onStartup', ...args);
     bg.init();
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
-    if (alarm.name === 'periodicApiCheck') {
+    if (alarm.name === ALARM_NAME) {
         bg.update();
     }
 });

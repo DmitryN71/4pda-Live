@@ -5,6 +5,7 @@ import { QMS } from "./e/qms.js";
 import { print_count, print_logout, print_unavailable } from "./browser.js";
 
 
+export const ALARM_NAME = 'periodicApiCheck';
 const PERIOD_MINUTES = 0.5;
 const PARSE_APPBK_REGEXP = /u\d+:\d+:\d+:(\d+)/;
 
@@ -30,12 +31,16 @@ export class CS {
         console.debug('Init CS', this.#initialized, new Date());
         if (this.#initialized) return;
 
-        this.update();
-        chrome.alarms.create('periodicApiCheck', {
-            periodInMinutes: PERIOD_MINUTES
-        });
-
-        this.#initialized = true;
+        chrome.alarms.clear(ALARM_NAME)
+            .then(res => {
+                console.debug('clear_alarm', res);
+                chrome.alarms.create(ALARM_NAME, {
+                    periodInMinutes: PERIOD_MINUTES
+                }).then(() => {
+                    this.update();
+                    this.#initialized = true;
+                });
+            })
     }
 
     get popup_data() {
