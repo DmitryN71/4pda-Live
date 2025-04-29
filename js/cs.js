@@ -16,6 +16,7 @@ export class CS {
     constructor() {
         console.log('Start CS', new Date());
         this.#initialized = false;
+        this.available = false;
         this.user_id = 0;
         this.user_name;
         this.last_event = 0;
@@ -31,6 +32,7 @@ export class CS {
         console.debug('Init CS', this.#initialized, new Date());
         if (this.#initialized) return;
 
+        // https://developer.chrome.com/docs/extensions/reference/api/alarms
         chrome.alarms.clear(ALARM_NAME)
             .then(res => {
                 console.debug('clear_alarm', res);
@@ -80,19 +82,25 @@ export class CS {
                 } else {
                     this.user_id = 0;
                     this.user_name = '';
-                    console.debug('Unauthorized');
-                    print_logout();
                 }
             })
             .then(() => {
-                console.debug('Update done');
+                this.available = true;
                 this.notify = true;
-                print_count(
-                    this.qms.count,
-                    this.favorites.count
-                );
+                if (this.user_id) {
+                    console.debug('Update done');
+                    print_count(
+                        this.qms.count,
+                        this.favorites.count
+                    );
+                } else {
+                    console.debug('Unauthorized');
+                    print_logout();
+                }
+                
             })
             .catch(error => {
+                this.available = false;
                 print_unavailable();
                 console.error('API request failed:', error);
             });

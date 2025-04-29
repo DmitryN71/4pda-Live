@@ -65,3 +65,13 @@ chrome.notifications.onClicked.addListener(notificationId => {
             break;
     }
 });
+
+chrome.action.onClicked.addListener(tab => {
+    if (bg.available) {
+        if (bg.user_id) {
+            console.warn('action click & authorized')
+        } else {
+            return open_url('https://4pda.to/forum/index.php?act=auth');
+        }
+    }
+});
