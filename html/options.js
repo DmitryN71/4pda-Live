@@ -1,24 +1,59 @@
-document.addEventListener('DOMContentLoaded', function() {
+const DEFAULT_SETTINGS = {
+    updateInterval: 30,
+    setting1: false,
+    setting2: false
+};
+
+// 
+document.addEventListener('DOMContentLoaded', (event) => {
+    //console.debug(event);
+
     // Загрузка сохраненных настроек
-    chrome.storage.sync.get({
-        updateInterval: 300, // 5 минут по умолчанию
-        setting1: false,
-        setting2: false
-    }, function(items) {
-        document.getElementById('updateInterval').value = items.updateInterval;
-        document.getElementById('setting1').checked = items.setting1;
-        document.getElementById('setting2').checked = items.setting2;
-    });
+    chrome.storage.local.get(DEFAULT_SETTINGS)
+        .then((items) => {
+            //console.log(items);
+            for (let [key, value] of Object.entries(items)) {
+                //console.log(key, value);
+                let el = document.getElementById(`s.${key}`);
+                if (el.tagName == 'INPUT') {
+                    switch (el.type) {
+                        case 'checkbox':
+                            el.checked = value;
+                            break;
+                        case 'number':
+                            el.value = value;
+                            break;
+                        /*default:
+                            break;*/
+                    }
+                } else {
+                    console.warn(`no input for settings ${key}`);
+                }
+            }
+        });
 
     // Обработчик сохранения настроек
-    document.getElementById('saveSettings').addEventListener('click', function() {
-        const settings = {
-            updateInterval: parseInt(document.getElementById('updateInterval').value),
-            setting1: document.getElementById('setting1').checked,
-            setting2: document.getElementById('setting2').checked
-        };
+    document.getElementById('saveSettings').addEventListener('click', () => {
+        let settings = {};
+        for (let key in DEFAULT_SETTINGS) {
+            let el = document.getElementById(`s.${key}`);
+            if (el.tagName == 'INPUT') {
+                switch (el.type) {
+                    case 'checkbox':
+                        settings[key] = el.checked;
+                        break;
+                    case 'number':
+                        settings[key] = parseInt(el.value);
+                        break;
+                    default:
+                        continue;
+                }
+            } else {
+                console.warn(`no input for settings ${key}`);
+            }
+        }
 
-        chrome.storage.sync.set(settings, () => {
+        chrome.storage.local.set(settings, () => {
             // Показать уведомление о сохранении
             const status = document.getElementById('status');
             status.textContent = 'Настройки сохранены.';

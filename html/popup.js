@@ -4,7 +4,7 @@ const CLASS_ACCENT = 'accent';
 let elements = {};
 
 
-window.onload = () => {
+document.addEventListener('DOMContentLoaded', (event) => {
     chrome.runtime.sendMessage(
         {action: 'popup_loaded'},
         (response) => {
@@ -36,7 +36,7 @@ window.onload = () => {
             }
         }
     );
-};
+});
 
 
 function init() {
