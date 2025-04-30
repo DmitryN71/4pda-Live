@@ -1,0 +1,29 @@
+body {
+  width: 400px;
+  padding: 20px;
+  font-family: "Segoe UI", "Helvetica Neue", Helvetica, Tahoma, Arial, sans-serif;
+}
+.setting-group {
+  margin-bottom: 20px;
+}
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+input[type="number"] {
+  width: 100px;
+}
+.checkbox-group {
+  margin-bottom: 10px;
+}
+button {
+  background-color: #4373c3;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #35968e;
+}
