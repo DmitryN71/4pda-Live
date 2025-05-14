@@ -45,3 +45,16 @@ export async function fetch4(url) {
             }
         })
 }
+
+
+const pad = (num, size = 2) => String(num).padStart(size, '0');
+export function getLogDatetime() {
+    // YYYY-MM-DDTHH:mm:ss.sssZ
+    let date = new Date();
+    return (
+        pad(date.getHours()) + ':' +
+        pad(date.getMinutes()) + ':' +
+        pad(date.getSeconds()) + ',' +
+        pad(date.getMilliseconds(), 3)
+    );
+}

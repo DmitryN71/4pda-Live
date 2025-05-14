@@ -7,24 +7,21 @@
 </head>
 <body>
     <h1>Настройки 4PDA Инспектора</h1>
+
+    <h2>Оповещения</h2>
+
+    <h3>Сообщения</h3>
+    <label><input type="checkbox" id="notification_qms_popup">Всплывающие оповещения</label>
+    <label><input type="checkbox" id="notification_qms_all_messages">Оповещать о всех сообщениях</label>
+
+    <h3>Темы</h3>
+    <label><input type="checkbox" id="notification_themes_popup">Всплывающие оповещения</label>
+    <label><input type="checkbox" id="notification_themes_all_comments">Оповещать о всех комментариях</label>
     
-    <div class="setting-group">
-        <label for="s.updateInterval">Интервал обновления (секунды):</label>
-        <input type="number" id="s.updateInterval" min="30">
-    </div>
+    <h3>Упоминания</h3>
+    <label><input type="checkbox" id="notification_mentions_popup">Всплывающие оповещения</label>
 
-    <div class="setting-group">
-        <h3>Дополнительные настройки:</h3>
-        <div class="checkbox-group">
-            <input type="checkbox" id="s.setting1">
-            <label for="s.setting1">Настройка 1</label>
-        </div>
-        <div class="checkbox-group">
-            <input type="checkbox" id="s.setting2">
-            <label for="s.setting2">Настройка 2</label>
-        </div>
-    </div>
-
+    
     <button id="saveSettings">Сохранить настройки</button>
     <div id="status"></div>
 

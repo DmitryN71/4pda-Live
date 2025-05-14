@@ -1,20 +1,18 @@
-const DEFAULT_SETTINGS = {
-    updateInterval: 30,
-    setting1: false,
-    setting2: false
-};
-
-// 
 document.addEventListener('DOMContentLoaded', (event) => {
     //console.debug(event);
 
     // Загрузка сохраненных настроек
-    chrome.storage.local.get(DEFAULT_SETTINGS)
+    chrome.storage.local.get() // todo storage.sync
         .then((items) => {
-            //console.log(items);
             for (let [key, value] of Object.entries(items)) {
                 //console.log(key, value);
-                let el = document.getElementById(`s.${key}`);
+                let el = document.getElementById(key);
+
+                if (!el) {
+                    console.debug(`Element for "${key}" not found`);
+                    continue;
+                }
+                
                 if (el.tagName == 'INPUT') {
                     switch (el.type) {
                         case 'checkbox':
@@ -23,8 +21,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
                         case 'number':
                             el.value = value;
                             break;
-                        /*default:
-                            break;*/
                     }
                 } else {
                     console.warn(`no input for settings ${key}`);
@@ -35,23 +31,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // Обработчик сохранения настроек
     document.getElementById('saveSettings').addEventListener('click', () => {
         let settings = {};
-        for (let key in DEFAULT_SETTINGS) {
-            let el = document.getElementById(`s.${key}`);
-            if (el.tagName == 'INPUT') {
-                switch (el.type) {
-                    case 'checkbox':
-                        settings[key] = el.checked;
-                        break;
-                    case 'number':
-                        settings[key] = parseInt(el.value);
-                        break;
-                    default:
-                        continue;
-                }
-            } else {
-                console.warn(`no input for settings ${key}`);
+        document.querySelectorAll('input').forEach(el => {
+            switch (el.type) {
+                case 'checkbox':
+                    settings[el.id] = el.checked;
+                    break;
+                case 'number':
+                    settings[el.id] = parseInt(el.value);
+                    break;
             }
-        }
+        });
 
         chrome.storage.local.set(settings, () => {
             // Показать уведомление о сохранении

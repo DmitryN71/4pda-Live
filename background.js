@@ -1,5 +1,5 @@
 // background.js - Chrome Extension MV3 Service Worker
-import {CS, ALARM_NAME} from './js/cs.js';
+import {CS, ALARM_NAME, SETTINGS} from './js/cs.js';
 import {open_url} from './js/browser.js';
 
 
@@ -82,5 +82,6 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
             `Storage key "${key}" in namespace "${namespace}" changed.`,
             `Old value was "${oldValue}", new value is "${newValue}".`
         );
+        SETTINGS[key] = newValue;
     }
 });

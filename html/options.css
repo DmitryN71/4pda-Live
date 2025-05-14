@@ -3,20 +3,14 @@ body {
   padding: 20px;
   font-family: "Segoe UI", "Helvetica Neue", Helvetica, Tahoma, Arial, sans-serif;
 }
-.setting-group {
-  margin-bottom: 20px;
-}
 label {
   display: block;
   margin-bottom: 5px;
 }
-input[type="number"] {
-  width: 100px;
-}
-.checkbox-group {
-  margin-bottom: 10px;
-}
-button {
+/*input[type="number"] {
+    width: 100px;
+}*/
+button#saveSettings {
   background-color: #4373c3;
   color: white;
   padding: 10px 20px;
@@ -24,6 +18,6 @@ button {
   border-radius: 4px;
   cursor: pointer;
 }
-button:hover {
+button#saveSettings:hover {
   background-color: #35968e;
 }
