@@ -1,5 +1,6 @@
 import { open_url } from '../browser.js';
 import { AbstractEntity } from "./abstract.js";
+import { SETTINGS } from '../cs.js'
 
 
 export class Mentions extends AbstractEntity {
@@ -12,7 +13,7 @@ export class Mentions extends AbstractEntity {
 
         if (!this.exists(mention.id)) {
             console.debug('new_mention:', mention.title, mention.poster_name);
-            if (this.notify) mention.notification();
+            if (this.notify && SETTINGS.notification_mentions_popup) mention.notification();
         }
         return mention;
     }

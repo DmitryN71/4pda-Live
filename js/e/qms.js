@@ -1,5 +1,6 @@
 import { open_url } from '../browser.js';
 import { AbstractEntity } from "./abstract.js";
+import { SETTINGS } from '../cs.js'
 
 
 export class QMS extends AbstractEntity {
@@ -13,11 +14,11 @@ export class QMS extends AbstractEntity {
         if (current_dialog) {
             if (current_dialog.last_msg_ts < dialog.last_msg_ts) {
                 console.debug('new_message_in_dialog:', dialog.opponent_name, dialog.title);
-                if (this.cs.notify) dialog.notification();
+                if (this.cs.notify && SETTINGS.notification_qms_popup && SETTINGS.notification_qms_all_messages) dialog.notification();
             }
         } else {
             console.debug('new_dialog:', dialog.opponent_name, dialog.title);
-            if (this.cs.notify) dialog.notification();
+            if (this.cs.notify && SETTINGS.notification_qms_popup) dialog.notification();
         }
         return dialog;
     }

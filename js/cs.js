@@ -65,7 +65,7 @@ export class CS {
         this.mentions = new Mentions(this);
 
         this.notify = false;
-        this.settings = SETTINGS;
+        // this.settings = SETTINGS;
     }
 
     init() {

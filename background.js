@@ -36,6 +36,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             switch (message.what) {
                 case 'user':
                     return open_url(`https://4pda.to/forum/index.php?showuser=${bg.user_id}`);
+                case 'options':
+                    return open_url('/html/options.html');
                 case 'qms':
                     return bg.qms.open();
                 case 'favorites':

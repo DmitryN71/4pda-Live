@@ -45,6 +45,10 @@ function init() {
         chrome.runtime.sendMessage({action: 'open_url', what: 'user'});
     });
 
+    document.getElementById('options').addEventListener('click', () => {
+        chrome.runtime.sendMessage({action: 'open_url', what: 'options'});
+    });
+
     elements.qmsBox = document.getElementById('header-qms');
     elements.qmsBox.addEventListener("click", () => {
         chrome.runtime.sendMessage({action: 'open_url', what: 'qms'});

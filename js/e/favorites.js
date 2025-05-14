@@ -1,5 +1,6 @@
 import { open_url } from '../browser.js';
 import { AbstractEntity } from './abstract.js';
+import { SETTINGS } from '../cs.js'
 
 
 export class Favorites extends AbstractEntity {
@@ -17,11 +18,11 @@ export class Favorites extends AbstractEntity {
         if (current_theme) {
             if (current_theme.last_post_ts < theme.last_post_ts) {
                 // console.debug('new_comment_in_theme:', theme.id, theme.title);
-                if (this.notify) theme.notification();
+                if (this.notify && SETTINGS.notification_themes_popup && SETTINGS.notification_themes_all_comments) theme.notification();
             }
         } else {
             // console.debug('new_theme:', theme.id, theme.title);
-            if (this.notify) theme.notification();
+            if (this.notify && SETTINGS.notification_themes_popup) theme.notification();
         }
         return theme;
     }

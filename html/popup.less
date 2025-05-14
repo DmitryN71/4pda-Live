@@ -1,5 +1,14 @@
 @import "base.less";
 
+.icon_mask() {
+    width: 16px;
+    height: 16px;
+    mask-size: 16px 16px;
+    mask-repeat: no-repeat;
+    mask-position: left center;
+    background: @header-text;
+    transition: background-color @transition-time;
+}
 
 body {
     font-family: @font-family;
@@ -46,15 +55,9 @@ header {
 
             &::before {
                 content: '';
-                mask-repeat: no-repeat;
-                mask-size: 16px 16px;
-                mask-position: left center;
-                background: @header-text;
-                width: 16px;
-                height: 16px;
+                .icon_mask();
                 display: inline-block;
                 margin-right: 6px;
-                transition: background-color @transition-time;
             }
             &:hover::before {
                 background: @header-hover;
@@ -69,6 +72,13 @@ header {
         }
         #header-mentions::before {
             mask-image: url('../img/mention.svg');
+        }
+    }
+    #options {
+        .icon_mask();
+        mask-image: url('../img/settings.svg');
+        &:hover {
+            background: @header-hover;
         }
     }
 }

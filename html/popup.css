@@ -37,15 +37,25 @@ header #counters .header-item.accent {
 }
 header #counters .header-item::before {
   content: '';
-  mask-repeat: no-repeat;
-  mask-size: 16px 16px;
-  mask-position: left center;
-  background: #fff;
   width: 16px;
   height: 16px;
+  mask-size: 16px 16px;
+  mask-repeat: no-repeat;
+  mask-position: left center;
+  background: #fff;
+  transition: background-color 0.5s;
+  /*width: 16px;
+                height: 16px;
+                mask-size: 16px 16px;
+                mask-repeat: no-repeat;
+                mask-position: left center;
+                background: @header-text;
+                transition: background-color @transition-time;*/
   display: inline-block;
   margin-right: 6px;
-  transition: background-color 0.5s;
+}
+header #counters .header-item::before:hover {
+  background: #a7c2bf;
 }
 header #counters .header-item:hover::before {
   background: #a7c2bf;
@@ -58,6 +68,19 @@ header #counters #header-favorites::before {
 }
 header #counters #header-mentions::before {
   mask-image: url('../img/mention.svg');
+}
+header #options {
+  width: 16px;
+  height: 16px;
+  mask-size: 16px 16px;
+  mask-repeat: no-repeat;
+  mask-position: left center;
+  background: #fff;
+  transition: background-color 0.5s;
+  mask-image: url('../img/settings.svg');
+}
+header #options:hover {
+  background: #a7c2bf;
 }
 main ul#topic-list {
   list-style: none;
