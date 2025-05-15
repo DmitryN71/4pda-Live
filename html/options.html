@@ -6,24 +6,31 @@
     <link rel="stylesheet" href="options.css">
 </head>
 <body>
-    <h1>Настройки 4PDA Инспектора</h1>
+    <header>
+        <h1>Настройки 4PDA Инспектора</h1>
+    </header>  
+    <main>
+        <h2>Оповещения</h2>
 
-    <h2>Оповещения</h2>
+        <h3>Сообщения</h3>
+        <label><input type="checkbox" id="notification_qms_popup">Всплывающие оповещения</label>
+        <label><input type="checkbox" id="notification_qms_all_messages">Оповещать о всех сообщениях</label>
 
-    <h3>Сообщения</h3>
-    <label><input type="checkbox" id="notification_qms_popup">Всплывающие оповещения</label>
-    <label><input type="checkbox" id="notification_qms_all_messages">Оповещать о всех сообщениях</label>
+        <h3>Темы</h3>
+        <label><input type="checkbox" id="notification_themes_popup">Всплывающие оповещения</label>
+        <label><input type="checkbox" id="notification_themes_all_comments">Оповещать о всех комментариях</label>
+        
+        <h3>Упоминания</h3>
+        <label><input type="checkbox" id="notification_mentions_popup">Всплывающие оповещения</label>
 
-    <h3>Темы</h3>
-    <label><input type="checkbox" id="notification_themes_popup">Всплывающие оповещения</label>
-    <label><input type="checkbox" id="notification_themes_all_comments">Оповещать о всех комментариях</label>
-    
-    <h3>Упоминания</h3>
-    <label><input type="checkbox" id="notification_mentions_popup">Всплывающие оповещения</label>
-
-    
-    <button id="saveSettings">Сохранить настройки</button>
-    <div id="status"></div>
+        <div id="saveBlock">
+            <button id="saveSettings">Сохранить настройки</button>
+            <span id="saveStatus">Настройки сохранены.</span>
+        </div>
+    </main>
+    <footer>
+        <a href="https://4pda-inspector.github.io/4pda-inspector/" target="_blank"><img src="/img/icons/icon_128.png" class="logo" alt="logo"/></a>
+    </footer>
 
     <script src="options.js"></script>
 </body>

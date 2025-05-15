@@ -2,9 +2,26 @@
 
 
 body {
-    width: 400px;
-    padding: 20px;
+    background-color: @main-color;
     font-family: @font-family;
+}
+
+header {
+    text-align: center;
+    color: @header-text;
+}
+
+main {
+    background-color: @main-bg;
+    width: 400px;
+    margin: 20px auto;
+    padding: 15px;
+    border-radius: 10px;
+    color: @main-text;
+}
+
+footer {
+    text-align: center;
 }
 
 label {
@@ -15,7 +32,7 @@ label {
     width: 100px;
 }*/
 
-button#saveSettings {
+#saveSettings {
     background-color: @main-text;
     color: white;
     padding: 10px 20px;
@@ -24,5 +41,12 @@ button#saveSettings {
     cursor: pointer;
     &:hover {
         background-color: @main-hover;
+    }
+}
+
+#saveStatus {
+    display: none;
+    &.show {
+        display: inline;
     }
 }

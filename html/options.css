@@ -1,7 +1,21 @@
 body {
-  width: 400px;
-  padding: 20px;
+  background-color: #0072bc;
   font-family: "Segoe UI", "Helvetica Neue", Helvetica, Tahoma, Arial, sans-serif;
+}
+header {
+  text-align: center;
+  color: #fff;
+}
+main {
+  background-color: #fff;
+  width: 400px;
+  margin: 20px auto;
+  padding: 15px;
+  border-radius: 10px;
+  color: #4373c3;
+}
+footer {
+  text-align: center;
 }
 label {
   display: block;
@@ -10,7 +24,7 @@ label {
 /*input[type="number"] {
     width: 100px;
 }*/
-button#saveSettings {
+#saveSettings {
   background-color: #4373c3;
   color: white;
   padding: 10px 20px;
@@ -18,6 +32,12 @@ button#saveSettings {
   border-radius: 4px;
   cursor: pointer;
 }
-button#saveSettings:hover {
+#saveSettings:hover {
   background-color: #35968e;
+}
+#saveStatus {
+  display: none;
+}
+#saveStatus.show {
+  display: inline;
 }

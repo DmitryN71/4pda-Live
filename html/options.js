@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', (event) => {
     //console.debug(event);
+    const status_block = document.getElementById('saveStatus');
 
     // Загрузка сохраненных настроек
     chrome.storage.local.get() // todo storage.sync
@@ -43,11 +44,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
         });
 
         chrome.storage.local.set(settings, () => {
-            // Показать уведомление о сохранении
-            const status = document.getElementById('status');
-            status.textContent = 'Настройки сохранены.';
+            status_block.classList.add('show');
             setTimeout(function() {
-                status.textContent = '';
+                status_block.classList.remove('show');
             }, 2000);
         });
     });
