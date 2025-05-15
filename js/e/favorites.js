@@ -84,6 +84,7 @@ export class FavoriteTheme {
         return open_url(
             `https://4pda.to/forum/index.php?showtopic=${this.id}&view=${view}`
         ).then((tab) => {
+            //console.debug(tab);
             chrome.scripting.executeScript({
                 target: { tabId: tab.id },
                 function: () => {

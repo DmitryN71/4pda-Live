@@ -156,7 +156,7 @@ export class CS {
                 this.available = true;
                 this.notify = true;
                 if (this.user_id) {
-                    console.debug('Update done');
+                    console.debug('Update done', getLogDatetime());
                     this.update_action();
                 } else {
                     console.debug('Unauthorized');
