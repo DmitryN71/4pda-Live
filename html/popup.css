@@ -4,7 +4,6 @@ body {
   margin: 0;
   font-size: 14px;
   min-width: 400px;
-  max-width: 800px;
 }
 header {
   position: sticky;
@@ -44,18 +43,8 @@ header #counters .header-item::before {
   mask-position: left center;
   background: #fff;
   transition: background-color 0.5s;
-  /*width: 16px;
-                height: 16px;
-                mask-size: 16px 16px;
-                mask-repeat: no-repeat;
-                mask-position: left center;
-                background: @header-text;
-                transition: background-color @transition-time;*/
   display: inline-block;
   margin-right: 6px;
-}
-header #counters .header-item::before:hover {
-  background: #a7c2bf;
 }
 header #counters .header-item:hover::before {
   background: #a7c2bf;
@@ -112,10 +101,14 @@ main ul#topic-list li .topic-last-info {
 main ul#topic-list li .topic-last-info:hover {
   color: #35968e;
 }
+main ul#topic-list li.used .topic-title {
+  color: #949DB0;
+  text-decoration: line-through;
+}
 main ul#topic-list li:hover {
   background-color: #f0faff;
 }
-main ul#topic-list li:hover .topic-title {
+main ul#topic-list li:hover:not(.used) .topic-title {
   color: #35968e;
 }
 main ul#topic-list li + li {
