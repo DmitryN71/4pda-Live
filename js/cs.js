@@ -123,6 +123,13 @@ export class CS {
         };
     }
 
+    update_action() {
+        print_count(
+            this.qms.count,
+            this.favorites.count
+        );
+    }
+
     async update() {
         console.debug('Update:', getLogDatetime());
         return fetch4('https://4pda.to/forum/index.php?act=inspector&CODE=id')
@@ -150,10 +157,7 @@ export class CS {
                 this.notify = true;
                 if (this.user_id) {
                     console.debug('Update done');
-                    print_count(
-                        this.qms.count,
-                        this.favorites.count
-                    );
+                    this.update_action();
                 } else {
                     console.debug('Unauthorized');
                     print_logout();

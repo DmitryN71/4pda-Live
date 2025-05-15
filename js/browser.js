@@ -58,9 +58,9 @@ export function print_count(q_count, f_count) {
     chrome.action.setTitle({title: `4PDA - В сети\nНепрочитанных тем: ${f_count}\nНепрочитанных диалогов: ${q_count}`});
 }
 
-
 export async function open_url(url) {
     return chrome.tabs.create({
-        url: url
+        url: url,
+        active: true
     });
 }

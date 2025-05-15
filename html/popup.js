@@ -83,25 +83,25 @@ function add_theme_row(theme) {
     tpl_last_dt.textContent = new Date(theme.last_post_ts*1000).toLocaleString();
 
     if (theme.pin) tpl_caption.classList.add(CLASS_ACCENT);
+    if (theme.viewed) tpl_li.classList.add(CLASS_THEME_USED);
+
     tpl_li.addEventListener('click', (el) => {
         let current = el.target;
         //current.classList.add(CLASS_LOADING);
         if (current.classList.contains('tli')) {
+            tpl_li.classList.add(CLASS_THEME_USED);
             chrome.runtime.sendMessage({
                 action: 'open_url',
                 what: 'favorites',
                 id: theme.id,
                 view: 'getlastpost'
-            }).then(() => {
-                tpl_li.classList.add(CLASS_THEME_USED);
             });
         } else {
+            tpl_li.classList.add(CLASS_THEME_USED);
             chrome.runtime.sendMessage({
                 action: 'open_url',
                 what: 'favorites',
                 id: theme.id
-            }).then(() => {
-                tpl_li.classList.add(CLASS_THEME_USED);
             });
         }
     });

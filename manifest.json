@@ -14,7 +14,8 @@
 	"permissions": [
 		"alarms",
 		"notifications",
-		"storage"
+		"storage",
+		"scripting"
 	],
 	"host_permissions": [
 		"https://4pda.to/"

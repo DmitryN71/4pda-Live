@@ -7,22 +7,40 @@ export class Favorites extends AbstractEntity {
     ACT_CODE_API = 'fav';
     ACT_CODE_FORUM = 'fav';
 
+    get #list_filtered() {
+        return super.list.filter(theme => !theme.viewed);
+    }
+
     get list() {
-        return super.list.sort((a, b) => b.last_post_ts - a.last_post_ts);
+        return this.#list_filtered.sort((a, b) => b.last_post_ts - a.last_post_ts);
+    }
+
+    get count() {
+        return this.#list_filtered.length;
     }
 
     process_line(line) {
-        let theme = new FavoriteTheme(line),
+        let theme = new FavoriteTheme(line, this.cs),
             current_theme = this.get(theme.id);
 
         if (current_theme) {
             if (current_theme.last_post_ts < theme.last_post_ts) {
-                // console.debug('new_comment_in_theme:', theme.id, theme.title);
-                if (this.notify && SETTINGS.notification_themes_popup && SETTINGS.notification_themes_all_comments) theme.notification();
+                if (current_theme.viewed) {
+                    if (this.notify && SETTINGS.notification_themes_popup) {
+                        theme.notification();
+                    }
+                } else {
+                    // console.debug('new_comment_in_theme:', theme.id, theme.title);
+                    if (this.notify && SETTINGS.notification_themes_popup && SETTINGS.notification_themes_all_comments) {
+                        theme.notification();
+                    }
+                }
             }
         } else {
             // console.debug('new_theme:', theme.id, theme.title);
-            if (this.notify && SETTINGS.notification_themes_popup) theme.notification();
+            if (this.notify && SETTINGS.notification_themes_popup) {
+                theme.notification();
+            }
         }
         return theme;
     }
@@ -30,7 +48,9 @@ export class Favorites extends AbstractEntity {
 }
 
 export class FavoriteTheme {
-    constructor(obj) {
+    #cs;
+
+    constructor(obj, cs) {
         this.id = obj[0];
         this.title = obj[1];
         // this.posts_num = obj[2];
@@ -39,7 +59,9 @@ export class FavoriteTheme {
         this.last_post_ts = obj[5];
         // this.last_read_ts = obj[6];
         this.pin = (obj[7] == 1);
-        // this.viewed = false;
+        this.viewed = false;
+
+        this.#cs = cs;
     }
 
     notification(){
@@ -57,8 +79,24 @@ export class FavoriteTheme {
         }*/);
     }
 
-    open(view) {
+    async open(view) {
         view = view || 'getnewpost';
-        return open_url(`https://4pda.to/forum/index.php?showtopic=${this.id}&view=${view}`);
+        return open_url(
+            `https://4pda.to/forum/index.php?showtopic=${this.id}&view=${view}`
+        ).then((tab) => {
+            chrome.scripting.executeScript({
+                target: { tabId: tab.id },
+                function: () => {
+                    // check is last page
+                    return document.querySelector('span.pagecurrent-wa') != null && document.querySelector('span.pagecurrent-wa + span.pagelink') == null;
+                }
+            }).then(([is_last_page]) => {
+                console.debug('Is last theme page:', is_last_page.result);
+                this.viewed = is_last_page.result;
+                if (is_last_page.result) {
+                    this.#cs.update_action();
+                }
+            });
+        });
     }
 }
