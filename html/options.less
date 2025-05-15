@@ -50,3 +50,13 @@ label {
         display: inline;
     }
 }
+
+#a_logo {
+    width: 100px;
+    height: 100px;
+    filter: blur(2px);
+    transition: filter @transition-time;
+    &:hover {
+        filter: blur(0);
+    }
+}

@@ -41,3 +41,12 @@ label {
 #saveStatus.show {
   display: inline;
 }
+#a_logo {
+  width: 100px;
+  height: 100px;
+  filter: blur(2px);
+  transition: filter 0.5s;
+}
+#a_logo:hover {
+  filter: blur(0);
+}
