@@ -10,6 +10,10 @@ const PERIOD_MINUTES = 0.5;
 const PARSE_APPBK_REGEXP = /u\d+:\d+:\d+:(\d+)/;
 
 export let SETTINGS = {
+    notification_qms_level: 10,
+    notification_themes_level: 10,
+    notification_mentions_level: 20,
+
     notification_qms_popup: true,
     notification_qms_all_messages: false,
     notification_themes_popup: true,

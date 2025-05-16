@@ -12,15 +12,42 @@
     <main>
         <h2>Оповещения</h2>
 
-        <h3>Сообщения</h3>
+        <h3>Сообщения (QMS)</h3>
+
+        <fieldset id="notification_qms_level">
+            <legend>Всплывающие сообщения</legend>
+            <label><input type="radio" name="notification_qms_level" value="20">Все сообщения</label>
+            <label><input type="radio" name="notification_qms_level" value="10">Новые диалоги</label>
+            <label><input type="radio" name="notification_qms_level" value="0">Не оповещать</label>
+        </fieldset>
+
+
         <label><input type="checkbox" id="notification_qms_popup">Всплывающие оповещения</label>
         <label><input type="checkbox" id="notification_qms_all_messages">Оповещать о всех сообщениях</label>
 
         <h3>Темы</h3>
+
+        <fieldset id="notification_themes_level">
+            <legend>Всплывающие сообщения</legend>
+            <label><input type="radio" name="notification_themes_level" value="20">Все комментарии</label>
+            <label><input type="radio" name="notification_themes_level" value="12">Все новые темы + комментарии в закреплённых темах</label>
+            <label><input type="radio" name="notification_themes_level" value="10">Все новые темы</label>
+            <!-- <label><input type="radio" name="notification_themes_level" value="9">Все комментарии в закреплённых темах</label> -->
+            <label><input type="radio" name="notification_themes_level" value="5">Новые закреплённые темы</label>
+            <label><input type="radio" name="notification_themes_level" value="0">Не оповещать</label>
+        </fieldset>
+
         <label><input type="checkbox" id="notification_themes_popup">Всплывающие оповещения</label>
         <label><input type="checkbox" id="notification_themes_all_comments">Оповещать о всех комментариях</label>
         
         <h3>Упоминания</h3>
+
+        <fieldset id="notification_mentions_level">
+            <legend>Всплывающие сообщения</legend>
+            <label><input type="radio" name="notification_mentions_level" value="20">Все упоминания</label>
+            <label><input type="radio" name="notification_mentions_level" value="0">Не оповещать</label>
+        </fieldset>
+
         <label><input type="checkbox" id="notification_mentions_popup">Всплывающие оповещения</label>
 
         <div id="saveBlock">

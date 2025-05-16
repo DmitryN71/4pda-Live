@@ -6,25 +6,31 @@ document.addEventListener('DOMContentLoaded', (event) => {
     chrome.storage.local.get() // todo storage.sync
         .then((items) => {
             for (let [key, value] of Object.entries(items)) {
-                //console.log(key, value);
+                // console.debug(key, value);
                 let el = document.getElementById(key);
 
                 if (!el) {
                     console.debug(`Element for "${key}" not found`);
                     continue;
                 }
-                
-                if (el.tagName == 'INPUT') {
-                    switch (el.type) {
-                        case 'checkbox':
-                            el.checked = value;
-                            break;
-                        case 'number':
-                            el.value = value;
-                            break;
-                    }
-                } else {
-                    console.warn(`no input for settings ${key}`);
+
+                switch (el.tagName) {
+                    case 'INPUT':
+                        switch (el.type) {
+                            case 'checkbox':
+                                el.checked = value;
+                                break;
+                            case 'number':
+                                el.value = value;
+                                break;
+                        }
+                        break;
+                    case 'FIELDSET':
+                        el.querySelector(`input[value="${value}"]`).checked = true;
+                        break;
+                    default:
+                        console.warn(`No inputs for settings ${key}`);
+                        
                 }
             }
         });
@@ -40,8 +46,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 case 'number':
                     settings[el.id] = parseInt(el.value);
                     break;
+                case 'radio':
+                    if (el.checked) {
+                        // console.log(el.closest('fieldset'));
+                        settings[el.name] = parseInt(el.value);
+                    }
+                    break;
             }
         });
+        console.debug(settings);
 
         chrome.storage.local.set(settings, () => {
             status_block.classList.add('show');

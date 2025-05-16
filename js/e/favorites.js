@@ -19,28 +19,30 @@ export class Favorites extends AbstractEntity {
         return this.#list_filtered.length;
     }
 
+    #check_notify(level) {
+        return this.cs.notify && level <= SETTINGS.notification_themes_level;
+    }
+
     process_line(line) {
         let theme = new FavoriteTheme(line, this.cs),
-            current_theme = this.get(theme.id);
+            current_theme = this.get(theme.id),
+            n_level = 100;
 
         if (current_theme) {
             if (current_theme.last_post_ts < theme.last_post_ts) {
                 if (current_theme.viewed) {
-                    if (this.notify && SETTINGS.notification_themes_popup) {
-                        theme.notification();
-                    }
+                    n_level = theme.pin ? 5 : 10;
                 } else {
                     // console.debug('new_comment_in_theme:', theme.id, theme.title);
-                    if (this.notify && SETTINGS.notification_themes_popup && SETTINGS.notification_themes_all_comments) {
-                        theme.notification();
-                    }
+                    n_level = theme.pin ? 12 : 20;
                 }
             }
         } else {
-            // console.debug('new_theme:', theme.id, theme.title);
-            if (this.notify && SETTINGS.notification_themes_popup) {
-                theme.notification();
-            }
+            n_level = theme.pin ? 5 : 10;
+        }
+
+        if (this.#check_notify(n_level)) {
+            theme.notification();
         }
         return theme;
     }
