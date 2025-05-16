@@ -24,7 +24,10 @@ label {
 /*input[type="number"] {
     width: 100px;
 }*/
-#saveSettings {
+#saveBlock {
+  margin-top: 1em;
+}
+#saveBlock #saveSettings {
   background-color: #4373c3;
   color: white;
   padding: 10px 20px;
@@ -32,13 +35,13 @@ label {
   border-radius: 4px;
   cursor: pointer;
 }
-#saveSettings:hover {
+#saveBlock #saveSettings:hover {
   background-color: #35968e;
 }
-#saveStatus {
+#saveBlock #saveStatus {
   display: none;
 }
-#saveStatus.show {
+#saveBlock #saveStatus.show {
   display: inline;
 }
 #a_logo {

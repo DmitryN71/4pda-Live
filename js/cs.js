@@ -54,6 +54,7 @@ export let SETTINGS = {
 
 export class CS {
     #initialized;
+    #update_in_process = false;
 
     constructor() {
         console.log('Start CS', getLogDatetime());
@@ -136,6 +137,11 @@ export class CS {
 
     async update() {
         console.debug('Update:', getLogDatetime());
+        if (this.#update_in_process) {
+            console.debug('Update conflict. Skip.')
+            return;
+        }
+        this.#update_in_process = true;
         return fetch4('https://4pda.to/forum/index.php?act=inspector&CODE=id')
             .then(data => {
                 let user_data = parse_response(data);
@@ -172,6 +178,9 @@ export class CS {
                 this.available = false;
                 print_unavailable();
                 console.error('API request failed:', error);
+            })
+            .finally(() => {
+                this.#update_in_process = false;
             });
     }
 
