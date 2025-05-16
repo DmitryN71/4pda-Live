@@ -7,18 +7,25 @@ export class QMS extends AbstractEntity {
     ACT_CODE_API = 'qms';
     ACT_CODE_FORUM = 'qms';
 
+    #check_notify(level) {
+        return this.cs.notify && level <= SETTINGS.notification_qms_level;
+    }
+
     process_line(line) {
         let dialog = new Dialog(line),
-            current_dialog = this.get[dialog.id];
+            current_dialog = this.get[dialog.id],
+            n_level = 100;
 
         if (current_dialog) {
             if (current_dialog.last_msg_ts < dialog.last_msg_ts) {
-                console.debug('new_message_in_dialog:', dialog.opponent_name, dialog.title);
-                if (this.cs.notify && SETTINGS.notification_qms_popup && SETTINGS.notification_qms_all_messages) dialog.notification();
+                // new_message_in_dialog
+                n_level = 20;
             }
         } else {
-            console.debug('new_dialog:', dialog.opponent_name, dialog.title);
-            if (this.cs.notify && SETTINGS.notification_qms_popup) dialog.notification();
+            n_level = 10;
+        }
+        if (this.#check_notify(n_level)) {
+            dialog.notification();
         }
         return dialog;
     }

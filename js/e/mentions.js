@@ -7,13 +7,21 @@ export class Mentions extends AbstractEntity {
     ACT_CODE_API = 'mentions-list';
     ACT_CODE_FORUM = 'mentions';
 
+    #check_notify(level) {
+        return this.cs.notify && level <= SETTINGS.notification_mentions_level;
+    }
+
     process_line(line) {
-        let mention = new Mention(line);
+        let mention = new Mention(line),
+            n_level = 100;
         if (mention.from !== 0) return;
 
         if (!this.exists(mention.id)) {
-            console.debug('new_mention:', mention.title, mention.poster_name);
-            if (this.notify && SETTINGS.notification_mentions_popup) mention.notification();
+            // console.debug('new_mention:', mention.title, mention.poster_name);
+            n_level = 20;
+        }
+        if (this.#check_notify(n_level)) {
+            mention.notification();
         }
         return mention;
     }

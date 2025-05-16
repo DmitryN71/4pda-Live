@@ -14,11 +14,11 @@ export let SETTINGS = {
     notification_themes_level: 10,
     notification_mentions_level: 20,
 
-    notification_qms_popup: true,
+    /*notification_qms_popup: true,
     notification_qms_all_messages: false,
     notification_themes_popup: true,
     notification_themes_all_comments: false,
-    notification_mentions_popup: true
+    notification_mentions_popup: true*/
 
     /*interval: 30,
     open_themes_limit: 0,
