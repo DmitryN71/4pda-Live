@@ -85,5 +85,10 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
             `Old value was "${oldValue}", new value is "${newValue}".`
         );
         SETTINGS[key] = newValue;
+        switch (key) {
+            case 'toolbar_only_pin':
+                bg.favorites.filter_pin(newValue);
+                break;
+        }
     }
 });

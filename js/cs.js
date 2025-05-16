@@ -14,6 +14,8 @@ export let SETTINGS = {
     notification_themes_level: 10,
     notification_mentions_level: 20,
 
+    toolbar_only_pin: false,
+
     /*notification_qms_popup: true,
     notification_qms_all_messages: false,
     notification_themes_popup: true,
@@ -68,9 +70,6 @@ export class CS {
         this.favorites = new Favorites(this);
         this.qms = new QMS(this);
         this.mentions = new Mentions(this);
-
-        this.notify = false;
-        // this.settings = SETTINGS;
     }
 
     init() {
@@ -154,8 +153,7 @@ export class CS {
                         this.user_name = user_data[1];
                         console.debug('New user:', this.user_id, this.user_name);
                         this.last_event = 0;
-                        this.notify = false;
-                        return this.#update();
+                        return this.#update(false);
                     }                    
                 } else {
                     this.user_id = 0;
@@ -164,7 +162,6 @@ export class CS {
             })
             .then(() => {
                 this.available = true;
-                this.notify = true;
                 if (this.user_id) {
                     console.debug('Update done', getLogDatetime());
                     this.update_action();
@@ -184,7 +181,7 @@ export class CS {
             });
     }
 
-    async #update() {
+    async #update(notify = true) {
         return fetch(`https://appbk.4pda.to/er/u${this.user_id}/s${this.last_event}`)
             .then(response => response.text())
             .then(data => {
@@ -194,9 +191,9 @@ export class CS {
                         console.debug('Has new events');
                         this.last_event = parsed[1];
                         return Promise.all([
-                            this.favorites.update(),
-                            this.qms.update(),
-                            this.mentions.update()
+                            this.favorites.update(notify),
+                            this.qms.update(notify),
+                            this.mentions.update(notify)
                         ]);
                     }
                 } // else: no new events

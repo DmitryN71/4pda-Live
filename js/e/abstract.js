@@ -11,10 +11,6 @@ export class AbstractEntity {
         this._list = {};
     }
 
-    get notify() {
-        return this.cs.notify;
-    }
-
     get list() {
         return Object.values(this._list);
     }
@@ -44,7 +40,7 @@ export class AbstractEntity {
         }
     }
 
-    async update() {
+    async update(notify = true) {
         return fetch4(`https://4pda.to/forum/index.php?act=inspector&CODE=${this.ACT_CODE_API}`)
             .then(data => {
                 //console.debug(this.ACT_CODE_API, data);
@@ -53,14 +49,14 @@ export class AbstractEntity {
                 lines.forEach(line => {
                     if (line == "") return;
                     // console.debug('AbstractEntity:', line);
-                    const entity = this.process_line(parse_response(line));
+                    const entity = this.process_line(parse_response(line, notify));
                     if (entity) new_list[entity.id] = entity;
                 });
                 this._list = new_list;
             })
     }
 
-    process_line(line) {
+    process_line(line, notify) {
         console.debug(line);
         throw new Error('Not implemented');
     }

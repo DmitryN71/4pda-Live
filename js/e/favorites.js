@@ -19,14 +19,23 @@ export class Favorites extends AbstractEntity {
         return this.#list_filtered.length;
     }
 
-    #check_notify(level) {
-        return this.cs.notify && level <= SETTINGS.notification_themes_level;
+    filter_pin(only_pin) {
+        if (only_pin) {
+            this._list = Object.fromEntries(Object.entries(this._list).filter(([key, value]) => value.pin));
+            this.cs.update_action();
+        } else {
+            super.update(false).then(() => {
+                this.cs.update_action();
+            });
+        }
     }
 
-    process_line(line) {
+    process_line(line, notify) {
         let theme = new FavoriteTheme(line, this.cs),
             current_theme = this.get(theme.id),
             n_level = 100;
+
+        if (SETTINGS.toolbar_only_pin && !theme.pin) return;
 
         if (current_theme) {
             if (current_theme.last_post_ts < theme.last_post_ts) {
@@ -41,7 +50,7 @@ export class Favorites extends AbstractEntity {
             n_level = theme.pin ? 5 : 10;
         }
 
-        if (this.#check_notify(n_level)) {
+        if (notify && n_level <= SETTINGS.notification_themes_level) {
             theme.notification();
         }
         return theme;
