@@ -75,45 +75,65 @@ main ul#topic-list {
   list-style: none;
   margin: 0;
   padding: 0;
+  color: #949DB0;
 }
 main ul#topic-list li {
   padding: 5px 10px;
+  cursor: default;
+}
+main ul#topic-list li.one-theme {
   border: none;
   cursor: pointer;
   transition: background-color 0.5s;
+  border-color: #eceef1;
+  border-style: dashed;
+  border-width: 0;
 }
-main ul#topic-list li .topic-title {
+main ul#topic-list li.one-theme .topic-title {
   color: #4373c3;
   transition: color 0.5s;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-main ul#topic-list li .topic-title.accent {
+main ul#topic-list li.one-theme .topic-title.accent {
   color: #265f5a;
 }
-main ul#topic-list li .topic-last-info {
-  color: #949DB0;
+main ul#topic-list li.one-theme .topic-last-info {
   font-size: 11px;
   display: inline;
   transition: color 0.5s;
 }
-main ul#topic-list li .topic-last-info:hover {
+main ul#topic-list li.one-theme .topic-last-info:hover {
   color: #35968e;
 }
-main ul#topic-list li.used .topic-title {
+main ul#topic-list li.one-theme.used .topic-title {
   color: #949DB0;
   text-decoration: line-through;
 }
-main ul#topic-list li:hover {
+main ul#topic-list li.one-theme:hover {
   background-color: #f0faff;
 }
-main ul#topic-list li:hover:not(.used) .topic-title {
+main ul#topic-list li.one-theme:hover:not(.used) .topic-title {
   color: #35968e;
 }
-main ul#topic-list li + li {
-  border-top: 1px solid #eceef1;
+main ul#topic-list li.one-theme:not(:last-child) {
+  border-bottom-width: 1px;
 }
 #templates {
   display: none;
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #202124;
+  }
+  header {
+    background: #4373c3;
+  }
+  main ul#topic-list li.one-theme {
+    border-color: #383a3f;
+  }
+  main ul#topic-list li.one-theme:hover {
+    background-color: #383a3f;
+  }
 }

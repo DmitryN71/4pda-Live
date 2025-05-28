@@ -53,3 +53,8 @@ label {
 #a_logo:hover {
   filter: blur(0);
 }
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #4373c3;
+  }
+}
