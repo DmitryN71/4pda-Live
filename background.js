@@ -41,7 +41,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 case 'qms':
                     return bg.qms.open();
                 case 'favorites':
-                    return bg.favorites.open(message['id'], message['view']);
+                    return bg.favorites.open(
+                        message['id'],
+                        message['view'],
+                        SETTINGS.toolbar_open_theme_hide
+                    );
                 case 'mentions':
                     return bg.mentions.open();
             }

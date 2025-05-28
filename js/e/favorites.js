@@ -90,10 +90,11 @@ export class FavoriteTheme {
         }*/);
     }
 
-    async open(view) {
+    async open(view, set_active = true) {
         view = view || 'getnewpost';
         return open_url(
-            `https://4pda.to/forum/index.php?showtopic=${this.id}&view=${view}`
+            `https://4pda.to/forum/index.php?showtopic=${this.id}&view=${view}`,
+            set_active
         ).then((tab) => {
             //console.debug(tab);
             chrome.scripting.executeScript({

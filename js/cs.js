@@ -15,6 +15,7 @@ export let SETTINGS = {
     notification_mentions_level: 20,
 
     toolbar_only_pin: false,
+    toolbar_open_theme_hide: true,
 
     /*notification_qms_popup: true,
     notification_qms_all_messages: false,
@@ -36,7 +37,6 @@ export let SETTINGS = {
     toolbar_pin_color: true,
     toolbar_pin_up: false,
     toolbar_only_pin: false,
-    toolbar_open_theme_hide: true,
     toolbar_simple_list: false,
 
     toolbar_button_open_all: true,
