@@ -49,7 +49,7 @@ export class AbstractEntity {
                 lines.forEach(line => {
                     if (line == "") return;
                     // console.debug('AbstractEntity:', line);
-                    const entity = this.process_line(parse_response(line, notify));
+                    const entity = this.process_line(parse_response(line), notify);
                     if (entity) new_list[entity.id] = entity;
                 });
                 this._list = new_list;

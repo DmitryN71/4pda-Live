@@ -142,7 +142,7 @@ export class CS {
     }
 
     async update() {
-        console.debug('Start new update:', getLogDatetime());
+        console.debug('* Start new update:', getLogDatetime());
         if (this.#update_in_process) {
             console.debug('Update conflict. Skip.')
             return;
