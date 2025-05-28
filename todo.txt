@@ -1,5 +1,3 @@
-* Закрывать при открытии новой страницы (активировать новую вкладку) - ТОЛЬКО ДЛЯ ТЕМ
-<label><input type="checkbox" name="toolbar_open_theme_hide">Закрывать при открытии новой страницы (активировать новую вкладку)</label>
 * Закрепленные темы сверху
 <label><input type="checkbox" name="toolbar_pin_up">Выводить сверху</label>
 

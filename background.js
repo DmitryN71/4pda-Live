@@ -91,8 +91,12 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
         SETTINGS[key] = newValue;
         if (!bg.initialized) return;
         switch (key) {
-            case 'toolbar_only_pin':
-                bg.favorites.filter_pin(newValue);
+            case 'toolbar_pin_themes_level':
+                if (oldValue == 20) {
+                    bg.favorites.filter_pin(false);
+                } else if (newValue == 20) {
+                    bg.favorites.filter_pin(true);
+                }
                 break;
         }
     }

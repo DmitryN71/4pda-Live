@@ -23,8 +23,14 @@
 
         <h3>Темы</h3>
 
-        <label><input type="checkbox" id="toolbar_only_pin">Только закреплённые темы</label>
         <label><input type="checkbox" id="toolbar_open_theme_hide">Закрывать попап при открытии темы (активировать новую вкладку)</label>
+
+        <fieldset id="toolbar_pin_themes_level">
+            <legend>Закреплённые темы</legend>
+            <label><input type="radio" name="toolbar_pin_themes_level" value="20">Показывать только закреплённые темы</label>
+            <label><input type="radio" name="toolbar_pin_themes_level" value="10">Выводить сверху в попапе</label>
+            <label><input type="radio" name="toolbar_pin_themes_level" value="0">Только выделять цветом</label>
+        </fieldset>
 
         <fieldset id="notification_themes_level">
             <legend>Всплывающие сообщения</legend>

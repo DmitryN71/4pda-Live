@@ -3,6 +3,18 @@ import { AbstractEntity } from './abstract.js';
 import { SETTINGS } from '../cs.js'
 
 
+function _sort_by_last_post(a, b) {
+    return b.last_post_ts - a.last_post_ts;
+}
+
+function _sort_with_pin(a, b) {
+    if (a.pin == b.pin) {
+        return _sort_by_last_post(a, b);
+    } else {
+        return b.pin - a.pin;
+    }
+}
+
 export class Favorites extends AbstractEntity {
     ACT_CODE_API = 'fav';
     ACT_CODE_FORUM = 'fav';
@@ -12,7 +24,11 @@ export class Favorites extends AbstractEntity {
     }
 
     get list() {
-        return this.#list_filtered.sort((a, b) => b.last_post_ts - a.last_post_ts);
+        return this.#list_filtered.sort(
+            SETTINGS.toolbar_pin_themes_level == 10
+                ? _sort_with_pin
+                : _sort_by_last_post
+        );
     }
 
     get count() {
@@ -35,7 +51,7 @@ export class Favorites extends AbstractEntity {
             current_theme = this.get(theme.id),
             n_level = 100;
 
-        if (SETTINGS.toolbar_only_pin && !theme.pin) return;
+        if (SETTINGS.toolbar_pin_themes_level == 20 && !theme.pin) return;
 
         if (current_theme) {
             if (current_theme.last_post_ts < theme.last_post_ts) {
