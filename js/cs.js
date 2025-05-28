@@ -113,6 +113,10 @@ export class CS {
             })
     }
 
+    get initialized() {
+        return this.#initialized;
+    }
+
     get popup_data() {
         return {
             user_id: this.user_id,
@@ -138,7 +142,7 @@ export class CS {
     }
 
     async update() {
-        console.debug('Update:', getLogDatetime());
+        console.debug('Start new update:', getLogDatetime());
         if (this.#update_in_process) {
             console.debug('Update conflict. Skip.')
             return;
