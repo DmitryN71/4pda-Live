@@ -1,7 +1,7 @@
 {
 	"name": "4PDA Инспектор",
 	"version": "4",
-    "version_name": "4.DEV.0517",
+    "version_name": "4.DEV.0528",
 	"description": "Мониторинг изменений на форуме 4pda",
 	"homepage_url": "https://4pda-inspector.github.io/4pda-inspector/",
 
@@ -13,6 +13,7 @@
 	},
 	"permissions": [
 		"alarms",
+		"cookies",
 		"notifications",
 		"storage",
 		"scripting"

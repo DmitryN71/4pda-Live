@@ -54,6 +54,9 @@ export let SETTINGS = {
 }
 
 
+class UnauthorizedError extends Error {};
+
+
 export class CS {
     #initialized;
     #update_in_process = false;
@@ -141,7 +144,23 @@ export class CS {
             return;
         }
         this.#update_in_process = true;
-        return fetch4('https://4pda.to/forum/index.php?act=inspector&CODE=id')
+        this.available = true;
+
+        return chrome.cookies.get({
+            url: 'https://4pda.to',
+            name: 'member_id',
+        }).
+            then(cookie => {
+                // just check auth
+                if (cookie) {
+                    console.debug('USER ID from cookie:', cookie.value); // parseInt
+                } else {
+                    throw new UnauthorizedError('Cookie not found');
+                }
+            })
+            .then(() => {
+                return fetch4('https://4pda.to/forum/index.php?act=inspector&CODE=id');
+            })
             .then(data => {
                 let user_data = parse_response(data);
                 if (user_data && user_data.length == 2) {
@@ -156,25 +175,24 @@ export class CS {
                         return this.#update(false);
                     }                    
                 } else {
-                    this.user_id = 0;
-                    this.user_name = '';
+                    throw new UnauthorizedError('User ID not found');
                 }
             })
             .then(() => {
-                this.available = true;
-                if (this.user_id) {
-                    console.debug('Update done', getLogDatetime());
-                    this.update_action();
-                } else {
-                    console.debug('Unauthorized');
-                    print_logout();
-                }
-                
+                console.debug('Update done', getLogDatetime());
+                this.update_action();
             })
             .catch(error => {
-                this.available = false;
-                print_unavailable();
-                console.error('API request failed:', error);
+                if (error instanceof UnauthorizedError) {
+                    console.debug('Unauthorized');
+                    this.user_id = 0;
+                    this.user_name = '';
+                    print_logout();
+                } else {
+                    this.available = false;
+                    print_unavailable();
+                    console.error('API request failed:', error);
+                }
             })
             .finally(() => {
                 this.#update_in_process = false;
