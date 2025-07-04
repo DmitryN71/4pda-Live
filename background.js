@@ -74,6 +74,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     break;
             }
             return true;
+        case 'theme-actions':
+            console.debug(message.what);
+            break;
     }
     // Return true if you want to send a response asynchronously
     //return true;

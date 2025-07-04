@@ -50,6 +50,16 @@ function init() {
         chrome.runtime.sendMessage({action: 'open_url', what: 'options'});
     });
 
+    document.getElementById('themes-open-all').addEventListener('click', () => {
+        chrome.runtime.sendMessage({action: 'theme-actions', what: 'open-all'});
+    });
+    document.getElementById('themes-open-all-pin').addEventListener('click', () => {
+        chrome.runtime.sendMessage({action: 'theme-actions', what: 'open-all-pin'});
+    });
+    document.getElementById('themes-read-all').addEventListener('click', () => {
+        chrome.runtime.sendMessage({action: 'theme-actions', what: 'read-all'});
+    });
+
     elements.qmsBox = document.getElementById('header-qms');
     elements.qmsBox.addEventListener("click", () => {
         chrome.runtime.sendMessage({action: 'open_url', what: 'qms'});

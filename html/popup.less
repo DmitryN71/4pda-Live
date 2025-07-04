@@ -1,13 +1,17 @@
 @import "base.less";
 
+.icon_mask_mini() {
+    mask-repeat: no-repeat;
+    mask-position: center center;
+    transition: background-color @transition-time;
+}
+
 .icon_mask(@size: 16px, @mask_size: 16px, @bg_color: @header-text) {
     width: @size;
     height: @size;
     mask-size: @mask_size @mask_size;
-    mask-repeat: no-repeat;
-    mask-position: center center;
     background: @bg_color;
-    transition: background-color @transition-time;
+    .icon_mask_mini();
 }
 
 .loading {
@@ -87,11 +91,40 @@ header {
             mask-image: url('../img/mention.svg');
         }
     }
+
     #options {
         .icon_mask();
         mask-image: url('../img/settings.svg');
         &:hover {
             background: @header-hover;
+        }
+    }
+
+    #theme-actions {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+
+        div {
+            .icon_mask_mini();
+            display: inline-block;
+            width: 22px;
+            height: 16px;
+            mask-size: 22px 16px;
+            background: @header-text;
+            &:hover {
+                background: @header-hover;
+            }
+        }
+
+        #themes-open-all {
+            mask-image: url('../img/mass/open_all.svg');
+        }
+        #themes-open-all-pin {
+            mask-image: url('../img/mass/open_pin.svg');
+        }
+        #themes-read-all {
+            mask-image: url('../img/mass/read_all.svg');
         }
     }
 }
