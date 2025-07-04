@@ -1,25 +1,26 @@
 // background.js - Chrome Extension MV3 Service Worker
-import {CS, ALARM_NAME, SETTINGS} from './js/cs.js';
+import {CS, SETTINGS} from './js/cs.js';
 import {open_url} from './js/browser.js';
+import {getLogDatetime} from "./js/utils.js";
 
 
 const bg = new CS();
+console.debug('Background started');
+
 // Set up the alarm when the service worker starts
 chrome.runtime.onInstalled.addListener(reason => {
-    console.debug('onInstalled', reason);
-    bg.init();
+    console.debug('onInstalled', reason, bg.initialized);
+    // bg.init();
 });
 
 // Also set up the alarm if the service worker starts (in case of reload)
-chrome.runtime.onStartup.addListener((...args) => {
-    console.debug('onStartup', ...args);
-    bg.init();
+chrome.runtime.onStartup.addListener(() => {
+    console.debug('onStartup', bg.initialized);
+    // bg.init();
 });
 
-chrome.alarms.onAlarm.addListener((alarm) => {
-    if (alarm.name === ALARM_NAME) {
-        bg.update();
-    }
+chrome.idle.onStateChanged.addListener(newState => {
+    console.debug('idle.onStateChanged', newState, getLogDatetime());
 });
 
 // Listen for messages from popup or other extension parts
@@ -73,7 +74,7 @@ chrome.notifications.onClicked.addListener(notificationId => {
 });
 
 chrome.action.onClicked.addListener(tab => {
-    if (bg.available) {
+    if (bg.initialized && bg.available) {
         if (bg.user_id) {
             console.warn('action click & authorized')
         } else {
@@ -97,6 +98,9 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
                 } else if (newValue == 20) {
                     bg.favorites.filter_pin(true);
                 }
+                break;
+            case 'interval':
+                bg.reset_timeout();
                 break;
         }
     }

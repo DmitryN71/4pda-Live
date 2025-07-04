@@ -1,12 +1,11 @@
-import { parse_response, fetch4, getLogDatetime } from "./utils.js";
+import { parse_response, fetch4, getLogDatetime, FETCH_TIMEOUT } from "./utils.js";
 import { Favorites } from "./e/favorites.js";
 import { Mentions } from "./e/mentions.js";
 import { QMS } from "./e/qms.js";
 import { print_count, print_logout, print_unavailable } from "./browser.js";
 
 
-export const ALARM_NAME = 'periodicApiCheck';
-const PERIOD_MINUTES = 0.5;
+const ALARM_NAME = 'periodicApiCheck';
 const PARSE_APPBK_REGEXP = /u\d+:\d+:\d+:(\d+)/;
 
 export let SETTINGS = {
@@ -17,6 +16,8 @@ export let SETTINGS = {
     toolbar_pin_themes_level: 0,
     // toolbar_only_pin: false,
     toolbar_open_theme_hide: true,
+    
+    interval: 30,
 
     /*notification_qms_popup: true,
     notification_qms_all_messages: false,
@@ -54,73 +55,121 @@ export let SETTINGS = {
 }
 
 
-class UnauthorizedError extends Error {};
-
-
 export class CS {
-    #initialized;
+    #initialized = false;
     #update_in_process = false;
+    #timeout_id = null;
+
+    #cookie_authorized = false;
+    #available = true;
+
+    #user_id = 0;
+    #user_name = '';
+    #last_event = 0;
 
     constructor() {
         console.log('Start CS', getLogDatetime());
 
-        this.#initialized = false;
-        this.available = false;
-        this.user_id = 0;
-        this.user_name;
-        this.last_event = 0;
-
         this.favorites = new Favorites(this);
         this.qms = new QMS(this);
         this.mentions = new Mentions(this);
-    }
 
-    init() {
-        console.debug('Init CS', this.#initialized, getLogDatetime());
-        if (this.#initialized) return;
+        // clear from old alarms; todo delete from prod
+        chrome.alarms.clear(ALARM_NAME);
 
-        // https://developer.chrome.com/docs/extensions/reference/api/alarms
-        chrome.alarms.clear(ALARM_NAME)
-            .then(res => {
-                console.debug('clear_alarm', res);
-                //console.log(Object.keys(SETTINGS));
+        chrome.storage.local.get(Object.keys(SETTINGS))
+            .then((items) => {
+                console.debug('Settings are loaded', items);
+                let to_save = {};
+                for (const [key, value] of Object.entries(SETTINGS)) {
+                    if (key in items) {
+                        SETTINGS[key] = items[key];
+                    } else {
+                        to_save[key] = value;
+                    }
+                    // console.debug(`${key}: ${value}`, key in items);
+                }
+                if (Object.keys(to_save).length) {
+                    chrome.storage.local.set(to_save, () => {
+                        console.debug('Settings are saved');
+                    });
+                }
+            })
+            .then(() => {
+                return this.#get_cookie_member_id()
+                    .then(start_member_id => {
+                        this.heartbeat = setInterval(() => {
+                            if (this.#update_in_process) return;
 
-                chrome.storage.local.get(Object.keys(SETTINGS))
-                    .then((items) => {
-                        console.debug('Settings loaded', items);
-                        let to_save = {};
-                        for (const [key, value] of Object.entries(SETTINGS)) {
-                            if (key in items) {
-                                SETTINGS[key] = items[key];
-                            } else {
-                                to_save[key] = value;
-                            }
-                            // console.debug(`${key}: ${value}`, key in items);
-                        }
-                        if (Object.keys(to_save).length) {
-                            chrome.storage.local.set(to_save, () => {
-                                console.debug('Settings are saved');
-                            });
-                        }
+                            this.#get_cookie_member_id()
+                                .then(member_id => {
+                                    //console.debug('Check auth cookie:', member_id, getLogDatetime());
+                                    if (this.#cookie_authorized == (member_id != null)) return;
 
-                        chrome.alarms.create(ALARM_NAME, {
-                            periodInMinutes: PERIOD_MINUTES
-                        }).then(() => {
-                            this.update();
-                            this.#initialized = true;
-                        });
+                                    if (member_id) {
+                                        console.debug('! Auth found');
+                                        this.#cookie_authorized = true;
+                                        this.update();
+                                    } else {
+                                        console.debug('! Auth lost');
+                                        clearTimeout(this.#timeout_id);
+                                        this.#do_logout();
+                                        this.#cookie_authorized = false;
+                                    }
+                                });
+                        }, 1000);
+
+                        this.#cookie_authorized  = start_member_id != null;
+                        return this.#cookie_authorized
                     });
             })
+            .then(auth => {
+                console.debug('CS initialized; auth: ', auth);
+                if (auth) {
+                    this.update();
+                } else {
+                    this.#do_logout();
+                }
+            })
+            .finally(() => {
+                this.#initialized = true; // ? todo after save settings?
+            });
     }
 
-    get initialized() {
-        return this.#initialized;
+    #get_cookie_member_id() {
+        return chrome.cookies.get({
+            url: 'https://4pda.to',
+            name: 'member_id',
+        })
+            .then(cookie => {
+                return cookie ? cookie.value : null;
+            });
     }
+
+    #do_logout() {
+        this.#user_id = 0;
+        this.#user_name = '';
+        print_logout();
+    }
+
+    reset_timeout() {
+        if (this.#update_in_process) {
+            console.debug('SET INTERVAL: Update conflict. Skip.')
+            return;
+        }
+        clearTimeout(this.#timeout_id);
+        this.update();
+    }
+
+    get initialized() { return this.#initialized; }
+    get available() { return this.#available; }
+    get user_id() { return this.#user_id; }
+    
 
     get popup_data() {
         return {
-            user_id: this.user_id,
-            user_name: this.user_name,
+            user_id: this.#user_id,
+            user_name: this.#user_name,
             favorites: {
                 count: this.favorites.count,
                 list: this.favorites.list
@@ -142,83 +191,91 @@ export class CS {
     }
 
     async update() {
-        console.debug('* Start new update:', getLogDatetime());
+        console.debug('* Start new update:', getLogDatetime(), this.#timeout_id);
+        if (!this.#cookie_authorized) {
+            console.debug('Hasn\'t cookie. Skip.')
+            return;
+        }
         if (this.#update_in_process) {
             console.debug('Update conflict. Skip.')
             return;
         }
+        let next_interval = SETTINGS.interval * 1000;
         this.#update_in_process = true;
-        this.available = true;
 
-        return chrome.cookies.get({
-            url: 'https://4pda.to',
-            name: 'member_id',
-        }).
-            then(cookie => {
-                // just check auth
-                if (cookie) {
-                    console.debug('USER ID from cookie:', cookie.value); // parseInt
-                } else {
-                    throw new UnauthorizedError('Cookie not found');
-                }
-            })
-            .then(() => {
-                return fetch4('https://4pda.to/forum/index.php?act=inspector&CODE=id');
-            })
+        return fetch4('https://4pda.to/forum/index.php?act=inspector&CODE=id')
             .then(data => {
                 let user_data = parse_response(data);
                 if (user_data && user_data.length == 2) {
-                    if (user_data[0] == this.user_id) {
-                        this.user_name = user_data[1];
-                        return this.#update();
+                    if (user_data[0] == this.#user_id) {
+                        this.#user_name = user_data[1];
                     } else {
-                        this.user_id = user_data[0];
-                        this.user_name = user_data[1];
-                        console.debug('New user:', this.user_id, this.user_name);
-                        this.last_event = 0;
-                        return this.#update(false);
-                    }                    
+                        this.#user_id = user_data[0];
+                        this.#user_name = user_data[1];
+                        console.debug('New user:', this.#user_id, this.#user_name);
+
+                        this.#last_event = 0;
+                        this.favorites.reset();
+                        this.qms.reset();
+                        this.mentions.reset();
+                    }   
+                    return this.#update_all_data();                 
                 } else {
-                    throw new UnauthorizedError('User ID not found');
+                    console.debug('Unauthorized');
+                    this.#do_logout();
                 }
-            })
-            .then(() => {
-                console.debug('Update done', getLogDatetime());
-                this.update_action();
             })
             .catch(error => {
-                if (error instanceof UnauthorizedError) {
-                    console.debug('Unauthorized');
-                    this.user_id = 0;
-                    this.user_name = '';
-                    print_logout();
-                } else {
-                    this.available = false;
-                    print_unavailable();
-                    console.error('API request failed:', error);
-                }
+                this.#available = false;
+                print_unavailable();
+                console.error('API request failed:', error);
+                next_interval = 5000;
             })
             .finally(() => {
+                this.#timeout_id = setTimeout(
+                    () => this.update(),
+                    next_interval
+                );
                 this.#update_in_process = false;
             });
     }
 
-    async #update(notify = true) {
-        return fetch(`https://appbk.4pda.to/er/u${this.user_id}/s${this.last_event}`)
+    async #update_all_data() {
+        return fetch(
+            `https://appbk.4pda.to/er/u${this.#user_id}/s${this.#last_event}`,
+            {
+                method: 'GET',
+                signal: AbortSignal.timeout(FETCH_TIMEOUT),
+            }
+        )
             .then(response => response.text())
             .then(data => {
+                /*if (!this.qms.notify || Math.random() < 0.5) {
+                    this.qms.notify = true;
+                    throw new Error('Simulated error');
+                }*/
                 if (data) {
                     let parsed = data.match(PARSE_APPBK_REGEXP);
                     if (parsed) {
-                        console.debug('Has new events');
-                        this.last_event = parsed[1];
+                        console.debug('! Has new events');
                         return Promise.all([
-                            this.favorites.update(notify),
-                            this.qms.update(notify),
-                            this.mentions.update(notify)
-                        ]);
+                            this.favorites.update(),
+                            this.qms.update(),
+                            this.mentions.update()
+                        ])
+                            .then(() => {
+                                this.#last_event = parsed[1];
+                                return true;
+                            });
                     }
                 } // else: no new events
+                return false;
+            })
+            .then(has_updates => {
+                console.debug('Update done', has_updates, this.#available, getLogDatetime());
+                // if (has_updates || !this.#available || !notify) {}
+                this.update_action();
+                this.#available = true;
             });
     }
 }
