@@ -24,6 +24,7 @@ header {
   display: flex;
   justify-content: space-between;
   padding: 10px;
+  z-index: 10;
 }
 header .header-item {
   cursor: pointer;
