@@ -1,12 +1,12 @@
 @import "base.less";
 
-.icon_mask() {
-    width: 16px;
-    height: 16px;
-    mask-size: 16px 16px;
+.icon_mask(@size: 16px, @bg_color: @header-text) {
+    width: @size;
+    height: @size;
+    mask-size: @size @size;
     mask-repeat: no-repeat;
     mask-position: left center;
-    background: @header-text;
+    background: @bg_color;
     transition: background-color @transition-time;
 }
 
@@ -115,12 +115,27 @@ main {
                     }
                 }
 
-                .topic-last-info {
+                .topic-2nd-line {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
                     font-size: 11px;
-                    display: inline;
-                    transition: color @transition-time;
-                    &:hover {
-                        color: @main-hover;
+                    margin-top: 2px;
+
+                    .topic-last-info {
+                        display: inline;
+                        transition: color @transition-time;
+                        &:hover {
+                            color: @main-hover;
+                        }
+                    }
+
+                    .mark-as-read {
+                        .icon_mask(12px, @main-gray);
+                        mask-image: url('../img/eye.svg');
+                        &:hover {
+                            background: @main-hover;
+                        }
                     }
                 }
 
@@ -128,6 +143,10 @@ main {
                     .topic-title {
                         color: @main-gray;
                         text-decoration: line-through;
+                    }
+
+                    .mark-as-read {
+                        display: none;
                     }
                 }
 

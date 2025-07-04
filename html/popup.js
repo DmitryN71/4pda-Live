@@ -96,6 +96,16 @@ function add_theme_row(theme) {
                 id: theme.id,
                 view: 'getlastpost'
             });
+        } else if (current.classList.contains('mark-as-read')) {    
+            chrome.runtime.sendMessage({
+                action: 'mark_as_read',
+                id: theme.id
+            }, result => {
+                console.debug('mark_as_read result:', result);
+                if (result) {
+                    tpl_li.classList.add(CLASS_THEME_USED);
+                }
+            });
         } else {
             tpl_li.classList.add(CLASS_THEME_USED);
             chrome.runtime.sendMessage({

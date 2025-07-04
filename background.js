@@ -33,6 +33,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             } else {
                 return open_url('https://4pda.to/forum/index.php?act=auth');
             }
+        case 'mark_as_read':
+            bg.favorites.do_read(message.id)
+                .then(result => {
+                    sendResponse(result);
+                })
+                .catch((error) => {
+                    console.error('Error marking theme as read:', error);
+                    sendResponse(false);
+                });
+            return true;
         case 'open_url':
             switch (message.what) {
                 case 'user':

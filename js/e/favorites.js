@@ -74,6 +74,10 @@ export class Favorites extends AbstractEntity {
         return theme;
     }
 
+    async do_read(theme_id) {
+        let theme = this.get(theme_id);
+        return theme ? theme.read() : false;
+    }
 }
 
 export class FavoriteTheme {
@@ -129,5 +133,16 @@ export class FavoriteTheme {
                 }
             });
         });
+    }
+
+    async read() {
+        return fetch(`https://4pda.to/forum/index.php?showtopic=${this.id}&view=getlastpost`)
+            .then(response => {
+                if (response.ok) {
+                    this.viewed = true;
+                    this.#cs.update_action();
+                }
+                return response.ok;
+            });
     }
 }

@@ -99,17 +99,39 @@ main ul#topic-list li.one-theme .topic-title {
 main ul#topic-list li.one-theme .topic-title.accent {
   color: #1a7f5b;
 }
-main ul#topic-list li.one-theme .topic-last-info {
+main ul#topic-list li.one-theme .topic-2nd-line {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   font-size: 11px;
+  margin-top: 2px;
+}
+main ul#topic-list li.one-theme .topic-2nd-line .topic-last-info {
   display: inline;
   transition: color 0.5s;
 }
-main ul#topic-list li.one-theme .topic-last-info:hover {
+main ul#topic-list li.one-theme .topic-2nd-line .topic-last-info:hover {
   color: #35968e;
+}
+main ul#topic-list li.one-theme .topic-2nd-line .mark-as-read {
+  width: 12px;
+  height: 12px;
+  mask-size: 12px 12px;
+  mask-repeat: no-repeat;
+  mask-position: left center;
+  background: #949DB0;
+  transition: background-color 0.5s;
+  mask-image: url('../img/eye.svg');
+}
+main ul#topic-list li.one-theme .topic-2nd-line .mark-as-read:hover {
+  background: #35968e;
 }
 main ul#topic-list li.one-theme.used .topic-title {
   color: #949DB0;
   text-decoration: line-through;
+}
+main ul#topic-list li.one-theme.used .mark-as-read {
+  display: none;
 }
 main ul#topic-list li.one-theme:hover {
   background-color: #f0faff;
