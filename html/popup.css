@@ -99,6 +99,7 @@ main ul#topic-list li.one-theme {
   border-color: #eceef1;
   border-style: dashed;
   border-width: 0;
+  position: relative;
 }
 main ul#topic-list li.one-theme .topic-title {
   color: #4373c3;
@@ -125,8 +126,11 @@ main ul#topic-list li.one-theme .topic-2nd-line .topic-last-info:hover {
   color: #35968e;
 }
 main ul#topic-list li.one-theme .topic-2nd-line .mark-as-read {
-  width: 12px;
-  height: 12px;
+  position: absolute;
+  right: 8px;
+  bottom: 3px;
+  width: 16px;
+  height: 16px;
   mask-size: 12px 12px;
   mask-repeat: no-repeat;
   mask-position: center center;

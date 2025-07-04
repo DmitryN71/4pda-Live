@@ -1,9 +1,9 @@
 @import "base.less";
 
-.icon_mask(@size: 16px, @bg_color: @header-text) {
+.icon_mask(@size: 16px, @mask_size: 16px, @bg_color: @header-text) {
     width: @size;
     height: @size;
-    mask-size: @size @size;
+    mask-size: @mask_size @mask_size;
     mask-repeat: no-repeat;
     mask-position: center center;
     background: @bg_color;
@@ -115,6 +115,7 @@ main {
                 border-color: @main-li-border;
                 border-style: dashed;
                 border-width: 0;
+                position: relative;
 
                 .topic-title {
                     color: @main-text;
@@ -143,7 +144,10 @@ main {
                     }
 
                     .mark-as-read {
-                        .icon_mask(12px, @main-gray);
+                        position: absolute;
+                        right: 8px;
+                        bottom: 3px;
+                        .icon_mask(16px, 12px, @main-gray);
                         mask-image: url('../img/eye.svg');
                         opacity: 0.5;
                         &.loading {
