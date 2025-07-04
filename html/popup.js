@@ -1,5 +1,6 @@
 const CLASS_THEME_USED = 'used';
 const CLASS_ACCENT = 'accent';
+const CLASS_LOADING = 'loading'
 
 let elements = {};
 
@@ -87,7 +88,6 @@ function add_theme_row(theme) {
 
     tpl_li.addEventListener('click', (el) => {
         let current = el.target;
-        //current.classList.add(CLASS_LOADING);
         if (current.classList.contains('tli')) {
             tpl_li.classList.add(CLASS_THEME_USED);
             chrome.runtime.sendMessage({
@@ -97,15 +97,16 @@ function add_theme_row(theme) {
                 view: 'getlastpost'
             });
         } else if (current.classList.contains('mark-as-read')) {    
-            current.classList.add('loading');
+            current.classList.add(CLASS_LOADING);
             chrome.runtime.sendMessage({
                 action: 'mark_as_read',
                 id: theme.id
             }, result => {
                 console.debug('mark_as_read result:', result);
-                current.classList.remove('loading');
+                current.classList.remove(CLASS_LOADING);
                 if (result) {
                     tpl_li.classList.add(CLASS_THEME_USED);
+                    update_themes_count();
                 }
             });
         } else {
@@ -119,4 +120,16 @@ function add_theme_row(theme) {
     });
 
     elements.themesList.appendChild(tpl);
+}
+
+function update_themes_count() {
+    chrome.runtime.sendMessage({
+        action: 'request',
+        what: 'favorites.count'
+    }, count => {
+        elements.favoritesBox.textContent = String(count);
+        if (count === 0) {
+            elements.favoritesBox.classList.remove(CLASS_ACCENT);
+        }
+    });
 }

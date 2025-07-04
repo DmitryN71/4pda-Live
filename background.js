@@ -61,6 +61,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     return bg.mentions.open();
             }
             break;
+        case 'request':
+            switch (message.what) {
+                case 'favorites.count':
+                    sendResponse(bg.favorites.count);
+                    break;
+                case 'qms.count':
+                    sendResponse(bg.qms.count);
+                    break;
+                case 'mentions.count':
+                    sendResponse(bg.mentions.count);
+                    break;
+            }
+            return true;
     }
     // Return true if you want to send a response asynchronously
     //return true;
