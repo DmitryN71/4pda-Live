@@ -1,3 +1,14 @@
+.loading {
+  animation: rotated 1s infinite linear;
+}
+@keyframes rotated {
+  0% {
+    rotate: 0deg;
+  }
+  100% {
+    rotate: 360deg;
+  }
+}
 body {
   font-family: "Segoe UI", "Helvetica Neue", Helvetica, Tahoma, Arial, sans-serif;
   background: #fff;
@@ -122,6 +133,9 @@ main ul#topic-list li.one-theme .topic-2nd-line .mark-as-read {
   background: #949DB0;
   transition: background-color 0.5s;
   mask-image: url('../img/eye.svg');
+}
+main ul#topic-list li.one-theme .topic-2nd-line .mark-as-read.loading {
+  mask-image: url("../img/refresh.svg");
 }
 main ul#topic-list li.one-theme .topic-2nd-line .mark-as-read:hover {
   background: #35968e;

@@ -10,6 +10,18 @@
     transition: background-color @transition-time;
 }
 
+.loading {
+    animation: rotated 1s infinite linear;
+}
+@keyframes rotated {
+    0% {
+      rotate: 0deg;
+    }
+    100% {
+      rotate: 360deg;
+    }
+}
+
 body {
     font-family: @font-family;
     background: @main-bg;
@@ -133,6 +145,9 @@ main {
                     .mark-as-read {
                         .icon_mask(12px, @main-gray);
                         mask-image: url('../img/eye.svg');
+                        &.loading {
+                            mask-image: url("../img/refresh.svg");
+                        }
                         &:hover {
                             background: @main-hover;
                         }

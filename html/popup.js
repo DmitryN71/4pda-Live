@@ -97,11 +97,13 @@ function add_theme_row(theme) {
                 view: 'getlastpost'
             });
         } else if (current.classList.contains('mark-as-read')) {    
+            current.classList.add('loading');
             chrome.runtime.sendMessage({
                 action: 'mark_as_read',
                 id: theme.id
             }, result => {
                 console.debug('mark_as_read result:', result);
+                current.classList.remove('loading');
                 if (result) {
                     tpl_li.classList.add(CLASS_THEME_USED);
                 }
