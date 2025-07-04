@@ -51,7 +51,7 @@ header #counters .header-item::before {
   height: 16px;
   mask-size: 16px 16px;
   mask-repeat: no-repeat;
-  mask-position: left center;
+  mask-position: center center;
   background: #fff;
   transition: background-color 0.5s;
   display: inline-block;
@@ -74,7 +74,7 @@ header #options {
   height: 16px;
   mask-size: 16px 16px;
   mask-repeat: no-repeat;
-  mask-position: left center;
+  mask-position: center center;
   background: #fff;
   transition: background-color 0.5s;
   mask-image: url('../img/settings.svg');
@@ -129,15 +129,17 @@ main ul#topic-list li.one-theme .topic-2nd-line .mark-as-read {
   height: 12px;
   mask-size: 12px 12px;
   mask-repeat: no-repeat;
-  mask-position: left center;
+  mask-position: center center;
   background: #949DB0;
   transition: background-color 0.5s;
   mask-image: url('../img/eye.svg');
+  opacity: 0.5;
 }
 main ul#topic-list li.one-theme .topic-2nd-line .mark-as-read.loading {
   mask-image: url("../img/refresh.svg");
 }
 main ul#topic-list li.one-theme .topic-2nd-line .mark-as-read:hover {
+  opacity: 1;
   background: #35968e;
 }
 main ul#topic-list li.one-theme.used .topic-title {
