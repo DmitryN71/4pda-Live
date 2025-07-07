@@ -40,6 +40,21 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 
+function create_port(name) {
+    const port = chrome.runtime.connect({
+        name: name
+    });
+    port.onMessage.addListener(function(msg) {
+        document.getElementById(`theme_${msg.id}`).classList.add(CLASS_THEME_USED);
+        print_themes_count(msg.count);
+    });
+    port.onDisconnect.addListener(() => {
+        console.debug(`port ${name} disconnected`);
+    });
+    return port;
+}
+
+
 function init() {
     elements.username_label = document.getElementById('user-name');
     elements.username_label.addEventListener("click", () => {
@@ -51,13 +66,13 @@ function init() {
     });
 
     document.getElementById('themes-open-all').addEventListener('click', () => {
-        chrome.runtime.sendMessage({action: 'theme-actions', what: 'open-all'});
+        create_port('themes-open-all');
     });
     document.getElementById('themes-open-all-pin').addEventListener('click', () => {
-        chrome.runtime.sendMessage({action: 'theme-actions', what: 'open-all-pin'});
+        create_port('themes-open-all-pin');
     });
     document.getElementById('themes-read-all').addEventListener('click', () => {
-        chrome.runtime.sendMessage({action: 'theme-actions', what: 'read-all'});
+        create_port('themes-read-all');
     });
 
     elements.qmsBox = document.getElementById('header-qms');
@@ -89,6 +104,8 @@ function add_theme_row(theme) {
         tpl_last_user = tpl.querySelector('.user'),
         tpl_last_dt = tpl.querySelector('.date');
     
+    tpl_li.id = `theme_${theme.id}`;
+    // tpl_li.dataset.theme_id = theme.id;
     tpl_caption.textContent = theme.title;
     tpl_last_user.textContent = theme.last_user_name;
     tpl_last_dt.textContent = new Date(theme.last_post_ts*1000).toLocaleString();
@@ -132,14 +149,18 @@ function add_theme_row(theme) {
     elements.themesList.appendChild(tpl);
 }
 
+function print_themes_count(count) {
+    elements.favoritesBox.textContent = String(count);
+    if (count === 0) {
+        elements.favoritesBox.classList.remove(CLASS_ACCENT);
+    }
+}
+
 function update_themes_count() {
     chrome.runtime.sendMessage({
         action: 'request',
         what: 'favorites.count'
     }, count => {
-        elements.favoritesBox.textContent = String(count);
-        if (count === 0) {
-            elements.favoritesBox.classList.remove(CLASS_ACCENT);
-        }
+        print_themes_count(count);
     });
 }

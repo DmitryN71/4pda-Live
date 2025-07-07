@@ -42,7 +42,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     console.error('Error marking theme as read:', error);
                     sendResponse(false);
                 });
-            return true;
+            break;
         case 'open_url':
             switch (message.what) {
                 case 'user':
@@ -73,13 +73,58 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     sendResponse(bg.mentions.count);
                     break;
             }
-            return true;
-        case 'theme-actions':
-            console.debug(message.what);
             break;
     }
     // Return true if you want to send a response asynchronously
-    //return true;
+    return true;
+});
+
+chrome.runtime.onConnect.addListener(async (port) => {
+    console.debug('onConnect', port.name);
+
+    switch (port.name) {
+        case 'themes-read-all':
+            for (let theme of bg.favorites.list) {
+                if (await theme.read()) {
+                    port.postMessage({
+                        id: theme.id,
+                        count: bg.favorites.count,
+                    });
+                }
+            }
+            break;
+        case 'themes-open-all':
+            let count_TPA = 0;
+            for (let theme of bg.favorites.list) {
+                theme.open(false, false)
+                    .then((is_last_page) => {
+                        if (is_last_page) {
+                            port.postMessage({
+                                id: theme.id,
+                                count: bg.favorites.count,
+                            });
+                        }
+                    });
+                if (++count_TPA >= SETTINGS.open_themes_limit) break;
+            }
+            break;
+        case 'themes-open-all-pin':
+            let count_TPAP = 0;
+            for (let theme of bg.favorites.list_pin) {
+                theme.open(false, false)
+                    .then((is_last_page) => {
+                        if (is_last_page) {
+                            port.postMessage({
+                                id: theme.id,
+                                count: bg.favorites.count,
+                            });
+                        }
+                    });
+                if (++count_TPAP >= SETTINGS.open_themes_limit) break;
+            }
+            break;
+    }
+    // port.disconnect();
 });
 
 // https://developer.chrome.com/docs/extensions/reference/api/notifications#type-NotificationOptions

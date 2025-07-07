@@ -23,6 +23,10 @@ export class Favorites extends AbstractEntity {
         return super.list.filter(theme => !theme.viewed);
     }
 
+    get list_pin() {
+        return super.list.filter(theme => !theme.viewed && theme.pin);
+    }
+
     get list() {
         return this.#list_filtered.sort(
             SETTINGS.toolbar_pin_themes_level == 10
@@ -119,18 +123,19 @@ export class FavoriteTheme {
             set_active
         ).then((tab) => {
             //console.debug(tab);
-            chrome.scripting.executeScript({
+            return chrome.scripting.executeScript({
                 target: { tabId: tab.id },
                 function: () => {
                     // check is last page
                     return document.querySelector('span.pagecurrent-wa') != null && document.querySelector('span.pagecurrent-wa + span.pagelink') == null;
                 }
             }).then(([is_last_page]) => {
-                console.debug('Is last theme page:', is_last_page.result);
+                console.debug('Is last theme page:', is_last_page.result, this.id);
                 this.viewed = is_last_page.result;
                 if (is_last_page.result) {
                     this.#cs.update_action();
                 }
+                return is_last_page.result;
             });
         });
     }

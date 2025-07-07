@@ -16,6 +16,7 @@ export let SETTINGS = {
     toolbar_pin_themes_level: 0,
     // toolbar_only_pin: false,
     toolbar_open_theme_hide: true,
+    open_themes_limit: 5,
     
     interval: 30,
 
