@@ -183,7 +183,8 @@ export class CS {
             },
             mentions: {
                 count: this.mentions.count
-            }
+            },
+            settings: SETTINGS
         };
     }
 

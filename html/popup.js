@@ -1,6 +1,7 @@
 const CLASS_THEME_USED = 'used';
 const CLASS_ACCENT = 'accent';
-const CLASS_LOADING = 'loading'
+const CLASS_LOADING = 'loading';
+const CLASS_HIDDEN = 'hidden';
 
 let elements = {};
 
@@ -26,14 +27,45 @@ document.addEventListener('DOMContentLoaded', (event) => {
             if (response.qms.count) elements.qmsBox.classList.add(CLASS_ACCENT);
             if (response.mentions.count) elements.mentionsBox.classList.add(CLASS_ACCENT);
 
+            let has_pin_themes = false;
             if (response.favorites.count) {
                 elements.favoritesBox.classList.add(CLASS_ACCENT);
                 for (let theme of response.favorites.list) {
                     add_theme_row(theme);
+                    if (theme.pin) has_pin_themes = true;
                 }
             } else {
                 let tpl = document.getElementById('tpl-no-themes').content.cloneNode(true);
                 elements.themesList.appendChild(tpl);
+            }
+
+            let show_themes_actions_list = [];
+            if (response.favorites.count) {
+                if (response.settings.toolbar_button_open_all) {
+                    show_themes_actions_list.push('themes-open-all');
+                    if (has_pin_themes) {
+                        show_themes_actions_list.push('themes-open-all-pin');
+                    }
+                }
+                if (response.settings.toolbar_button_read_all) {
+                    show_themes_actions_list.push('themes-read-all');
+                }
+            }
+
+            if (show_themes_actions_list.length) {
+                let theme_buttons = document.getElementById('theme-actions').getElementsByClassName('header-item');
+                for (let button of theme_buttons) {
+                    if (show_themes_actions_list.includes(button.id)) {
+                        button.addEventListener('click', () => {
+                            create_port(button.id);
+                        });
+                    } else {
+                        // button.remove();
+                        button.classList.add(CLASS_HIDDEN);
+                    }
+                }
+            } else {
+                document.getElementById('theme-actions').remove();
             }
         }
     );
@@ -63,16 +95,6 @@ function init() {
 
     document.getElementById('options').addEventListener('click', () => {
         chrome.runtime.sendMessage({action: 'open_url', what: 'options'});
-    });
-
-    document.getElementById('themes-open-all').addEventListener('click', () => {
-        create_port('themes-open-all');
-    });
-    document.getElementById('themes-open-all-pin').addEventListener('click', () => {
-        create_port('themes-open-all-pin');
-    });
-    document.getElementById('themes-read-all').addEventListener('click', () => {
-        create_port('themes-read-all');
     });
 
     elements.qmsBox = document.getElementById('header-qms');
