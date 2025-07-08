@@ -14,8 +14,6 @@
         <input type="range" id="interval" min="0" step="1">
         <span id="interval_output"></span>
 
-        <h2>Оповещения</h2>
-
         <h3>Сообщения (QMS)</h3>
 
         <fieldset id="notification_qms_level">
@@ -26,8 +24,6 @@
         </fieldset>
 
         <h3>Темы</h3>
-
-        <label><input type="checkbox" id="toolbar_open_theme_hide">Закрывать попап при открытии темы (активировать новую вкладку)</label>
 
         <fieldset id="toolbar_pin_themes_level">
             <legend>Закреплённые темы</legend>
@@ -53,6 +49,17 @@
             <label><input type="radio" name="notification_mentions_level" value="20">Все упоминания</label>
             <label><input type="radio" name="notification_mentions_level" value="0">Не оповещать</label>
         </fieldset>
+
+        <h3>Всплывающая панель</h3>
+
+        <label><input type="checkbox" id="toolbar_open_theme_hide">Закрывать попап при открытии темы (активировать новую вкладку)</label>
+
+        <h4>Управляющие кнопки</h4>
+
+        <label><input type="checkbox" id="toolbar_button_open_all">"Открыть все непрочитанные темы в новых вкладках"</label>
+        <label>Открывать порциями по: <input type="number" min="1" max="50" step="1" id="open_themes_limit"></label>
+        <label><input type="checkbox" id="toolbar_button_read_all">"Пометить все темы прочитанными"</label>
+		
 
         <div id="saveBlock">
             <button id="saveSettings">Сохранить настройки</button>

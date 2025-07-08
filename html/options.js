@@ -71,7 +71,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     settings[el.id] = el.checked;
                     break;
                 case 'number':
-                    settings[el.id] = parseInt(el.value);
+                    let e_val = parseInt(el.value),
+                        e_min = parseInt(el.min),
+                        e_max = parseInt(el.max);
+                    // console.debug(el.id, e_val, e_min, e_max);
+                    if (e_val) {
+                        if (e_val < e_min) {
+                            e_val = e_min;
+                        } else if (e_val > e_max) {
+                            e_val = e_max;
+                        }
+                    } else {
+                        e_val = e_max;
+                    }
+                    
+                    el.value = e_val;
+                    settings[el.id] = e_val;
                     break;
                 case 'radio':
                     if (el.checked) {
