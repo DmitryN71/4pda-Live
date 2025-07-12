@@ -89,7 +89,7 @@ header #options:hover {
 header #theme-actions {
   display: flex;
   flex-direction: row;
-  gap: 5px;
+  gap: 10px;
 }
 header #theme-actions div {
   mask-repeat: no-repeat;
