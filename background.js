@@ -23,6 +23,20 @@ chrome.idle.onStateChanged.addListener(newState => {
     console.debug('idle.onStateChanged', newState, getLogDatetime());
 });
 
+chrome.contextMenus.create({
+    title: 'Принудительное обновление',
+    id: 'update.all',
+    contexts: ["action"],
+});
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+    switch (info.menuItemId) {
+        case 'update.all':
+            bg.reset_timeout();
+            break;
+    }
+    // console.log(info, tab);
+});
+
 // Listen for messages from popup or other extension parts
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     switch (message.action) {
