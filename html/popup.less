@@ -248,16 +248,23 @@ main {
     }
     header {
         background: @dark-header-bg;
+        > div {
+            opacity: 0.8;
+        }
     }
     main {
         ul#topic-list {
             li.one-theme {
-                border-color: @dark-hover;
+                border-color: @dark-li-border;
                 &:hover {
-                    background-color: @dark-hover;
+                    background-color: @dark-li-hover;
                 }
                 .topic-title {
-                    filter: brightness(120%);
+                    // filter: brightness(120%);
+                    color: #7fa7fc;
+                    &.accent {
+                        color: #59b08d;
+                    }
                 }
             }
         }

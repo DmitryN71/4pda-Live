@@ -222,15 +222,21 @@ main ul#topic-list li.one-theme:not(:last-child) {
     background: #202124;
   }
   header {
-    background: #4373c3;
+    background: #335ca0;
+  }
+  header > div {
+    opacity: 0.8;
   }
   main ul#topic-list li.one-theme {
     border-color: #383a3f;
   }
   main ul#topic-list li.one-theme:hover {
-    background-color: #383a3f;
+    background-color: #2c2d32;
   }
   main ul#topic-list li.one-theme .topic-title {
-    filter: brightness(120%);
+    color: #7fa7fc;
+  }
+  main ul#topic-list li.one-theme .topic-title.accent {
+    color: #59b08d;
   }
 }
