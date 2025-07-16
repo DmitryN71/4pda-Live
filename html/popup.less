@@ -8,12 +8,11 @@
     transition: background-color @transition-time;
 }
 
-.icon_mask(@size: 16px, @mask_size: 16px, @bg_color: @header-text) {
+.icon_mask(@size: 16px, @mask_size: 16px) {
     width: @size;
     height: @size;
     mask-size: @mask_size @mask_size;
     -webkit-mask-size: @mask_size @mask_size;
-    background: @bg_color;
     .icon_mask_mini();
 }
 
@@ -80,6 +79,7 @@ header {
             &::before {
                 content: '';
                 .icon_mask();
+                background: @header-text;
                 display: inline-block;
                 margin-right: 6px;
             }
@@ -104,6 +104,7 @@ header {
 
     #options {
         .icon_mask();
+        background: @header-text;
         mask-image: url('../img/settings.svg');
         -webkit-mask-image: url('../img/settings.svg');
         &:hover {
@@ -196,7 +197,8 @@ main {
                         position: absolute;
                         right: 8px;
                         bottom: 3px;
-                        .icon_mask(16px, 12px, @main-gray);
+                        .icon_mask(16px, 12px);
+                        background: @main-gray;
                         mask-image: url('../img/eye.svg');
                         -webkit-mask-image: url('../img/eye.svg');
                         opacity: 0.5;
@@ -248,9 +250,10 @@ main {
     }
     header {
         background: @dark-header-bg;
-        > div {
-            opacity: 0.8;
-        }
+        color: @dark-text;
+        #counters .header-item::before {background: @dark-text;}
+        #options {background: @dark-text;}
+        #theme-actions div {background: @dark-text;}
     }
     main {
         ul#topic-list {
@@ -260,10 +263,9 @@ main {
                     background-color: @dark-li-hover;
                 }
                 .topic-title {
-                    // filter: brightness(120%);
-                    color: #7fa7fc;
+                    color: @dark-text;
                     &.accent {
-                        color: #59b08d;
+                        color: @dark-accent;
                     }
                 }
             }
