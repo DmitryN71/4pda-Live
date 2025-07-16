@@ -1,5 +1,31 @@
 @import "base.less";
 
+:root {
+    --body-background-color: @main-bg;
+    --header-background-color: @header-bg;
+    --header-text-color: @header-text;
+    --header-hover-color: @header-hover;
+    --main-text-color: @main-text;
+    --main-text-color-accent: @main-accent; 
+    --main-hover-color: @main-hover;
+    --main-li-hover-color: @main-li-hover;
+    --main-li-border-color: @main-li-border;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --body-background-color: @dark-bg;
+        --header-background-color: @dark-header-bg;
+        --header-text-color: @dark-text;
+        --header-hover-color: #fff;
+        --main-text-color: @dark-text;
+        --main-text-color-accent: @dark-accent;
+        --main-hover-color: #fff;
+        --main-li-hover-color: @dark-li-hover;
+        --main-li-border-color: @dark-li-border;
+    }
+}
+
 .icon_mask_mini() {
     mask-repeat: no-repeat;
     -webkit-mask-repeat: no-repeat;
@@ -14,6 +40,11 @@
     mask-size: @mask_size @mask_size;
     -webkit-mask-size: @mask_size @mask_size;
     .icon_mask_mini();
+}
+
+.icon_mask_url(@url) {
+    mask-image: url(@url);
+    -webkit-mask-image: url(@url);
 }
 
 .hidden {
@@ -33,20 +64,19 @@
 }
 
 body {
+    background: var(--body-background-color);
     font-family: @font-family;
-    background: @main-bg;
     margin: 0;
     font-size: 14px;
     min-width: 400px;
     // max-width: 800px;
-    // max-height: 600px;
 }
 
 header {
     position: sticky;
     top: 0;
-    background: @header-bg;
-    color: @header-text;
+    background: var(--header-background-color);
+    color: var(--header-text-color);
     display: flex;
     justify-content: space-between;
     padding: 10px;
@@ -57,7 +87,7 @@ header {
         cursor: pointer;
         transition: color @transition-time;
         &:hover {
-            color: @header-hover;
+            color: var(--header-hover-color);
         }
     }
 
@@ -70,8 +100,7 @@ header {
             align-items: center;
             display: flex;
             opacity: 0.5;
-            transition: color @transition-time,
-                        opacity @transition-time;
+            transition: color @transition-time;
 
             &.accent { opacity: 1; }
             // &:hover { opacity: 1; }
@@ -79,36 +108,32 @@ header {
             &::before {
                 content: '';
                 .icon_mask();
-                background: @header-text;
+                background: var(--header-text-color);
                 display: inline-block;
                 margin-right: 6px;
             }
             &:hover::before {
-                background: @header-hover;
+                background: var(--header-hover-color);
             }
         }
 
         #header-qms::before {
-            mask-image: url('../img/message.svg');
-            -webkit-mask-image: url('../img/message.svg');
+            .icon_mask_url('../img/message.svg');
         }
         #header-favorites::before {
-            mask-image: url('../img/star.svg');
-            -webkit-mask-image: url('../img/star.svg');
+            .icon_mask_url('../img/star.svg');
         }
         #header-mentions::before {
-            mask-image: url('../img/mention.svg');
-            -webkit-mask-image: url('../img/mention.svg');
+            .icon_mask_url('../img/mention.svg');
         }
     }
 
     #options {
         .icon_mask();
-        background: @header-text;
-        mask-image: url('../img/settings.svg');
-        -webkit-mask-image: url('../img/settings.svg');
+        .icon_mask_url('../img/settings.svg');
+        background: var(--header-text-color);
         &:hover {
-            background: @header-hover;
+            background: var(--header-hover-color);
         }
     }
 
@@ -124,23 +149,20 @@ header {
             height: 16px;
             mask-size: 22px 16px;
             -webkit-mask-size: 22px 16px;
-            background: @header-text;
+            background: var(--header-text-color);
             &:hover {
-                background: @header-hover;
+                background: var(--header-hover-color);
             }
         }
 
         #themes-open-all {
-            mask-image: url('../img/mass/open_all.svg');
-            -webkit-mask-image: url('../img/mass/open_all.svg');
+            .icon_mask_url('../img/mass/open_all.svg');
         }
         #themes-open-all-pin {
-            mask-image: url('../img/mass/open_pin.svg');
-            -webkit-mask-image: url('../img/mass/open_pin.svg');
+            .icon_mask_url('../img/mass/open_pin.svg');
         }
         #themes-read-all {
-            mask-image: url('../img/mass/read_all.svg');
-            -webkit-mask-image: url('../img/mass/read_all.svg');
+            .icon_mask_url('../img/mass/read_all.svg');
         }
     }
 }
@@ -162,19 +184,19 @@ main {
                 border: none;
                 cursor: pointer;
                 transition: background-color @transition-time;
-                border-color: @main-li-border;
+                border-color: var(--main-li-border-color);
                 border-style: dashed;
                 border-width: 0;
                 position: relative;
 
                 .topic-title {
-                    color: @main-text;
+                    color: var(--main-text-color);
                     transition: color @transition-time;
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     &.accent {
-                        color: @main-accent;
+                        color: var(--main-text-color-accent);
                     }
                 }
 
@@ -189,7 +211,7 @@ main {
                         display: inline;
                         transition: color @transition-time;
                         &:hover {
-                            color: @main-hover;
+                            color: var(--main-hover-color);
                         }
                     }
 
@@ -199,16 +221,16 @@ main {
                         bottom: 3px;
                         .icon_mask(16px, 12px);
                         background: @main-gray;
-                        mask-image: url('../img/eye.svg');
-                        -webkit-mask-image: url('../img/eye.svg');
+                        .icon_mask_url('../img/eye.svg');
+                        transition: background-color @transition-time,
+                                    opacity @transition-time;
                         opacity: 0.5;
                         &.loading {
-                            mask-image: url("../img/refresh.svg");
-                            -webkit-mask-image: url("../img/refresh.svg");
+                            .icon_mask_url("../img/refresh.svg");
                         }
                         &:hover {
                             opacity: 1;
-                            background: @main-hover;
+                            background: var(--main-hover-color);
                         }
                     }
                 }
@@ -225,10 +247,10 @@ main {
                 }
 
                 &:hover {
-                    background-color: @main-li-hover;
+                    background-color: var(--main-li-hover-color);
                     &:not(.used) {
                         .topic-title {
-                            color: @main-hover;
+                            color: var(--main-hover-color);
                         }
                     }
                 }
@@ -244,31 +266,3 @@ main {
     display: none;
 }
 
-@media (prefers-color-scheme: dark) {
-    body {
-        background: @dark-bg;
-    }
-    header {
-        background: @dark-header-bg;
-        color: @dark-text;
-        #counters .header-item::before {background: @dark-text;}
-        #options {background: @dark-text;}
-        #theme-actions div {background: @dark-text;}
-    }
-    main {
-        ul#topic-list {
-            li.one-theme {
-                border-color: @dark-li-border;
-                &:hover {
-                    background-color: @dark-li-hover;
-                }
-                .topic-title {
-                    color: @dark-text;
-                    &.accent {
-                        color: @dark-accent;
-                    }
-                }
-            }
-        }
-    }
-}
