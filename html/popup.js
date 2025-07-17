@@ -132,7 +132,7 @@ function add_theme_row(theme) {
     tpl_last_user.textContent = theme.last_user_name;
     tpl_last_dt.textContent = new Date(theme.last_post_ts*1000).toLocaleString();
 
-    if (theme.pin) tpl_caption.classList.add(CLASS_ACCENT);
+    if (theme.pin) tpl_li.classList.add(CLASS_ACCENT);
     if (theme.viewed) tpl_li.classList.add(CLASS_THEME_USED);
 
     tpl_li.addEventListener('click', (el) => {
