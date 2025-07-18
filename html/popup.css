@@ -57,26 +57,27 @@ header {
   padding: 10px;
   z-index: 10;
 }
-header .header-item {
+header > div {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+header > div > div {
   cursor: pointer;
   transition: color 0.5s;
 }
-header .header-item:hover {
+header > div > div:hover {
   color: var(--header-hover-color);
   transform: translateY(-1px);
 }
-header #counters {
-  display: flex;
-  gap: 10px;
-}
-header #counters .header-item {
+header #counters > div {
   align-items: center;
   display: flex;
 }
-header #counters .header-item:not(.accent) {
+header #counters > div:not(.accent) {
   opacity: 0.5;
 }
-header #counters .header-item::before {
+header #counters > div::before {
   content: '';
   width: 16px;
   height: 16px;
@@ -89,9 +90,9 @@ header #counters .header-item::before {
   transition: background-color 0.5s;
   background: var(--header-text-color);
   display: inline-block;
-  margin-right: 6px;
+  margin-right: 5px;
 }
-header #counters .header-item:hover::before {
+header #counters > div:hover::before {
   background: var(--header-hover-color);
 }
 header #counters #header-qms::before {
@@ -106,29 +107,7 @@ header #counters #header-mentions::before {
   mask-image: url('../img/mention.svg');
   -webkit-mask-image: url('../img/mention.svg');
 }
-header #options {
-  width: 16px;
-  height: 16px;
-  mask-size: 16px 16px;
-  -webkit-mask-size: 16px 16px;
-  mask-repeat: no-repeat;
-  -webkit-mask-repeat: no-repeat;
-  mask-position: center center;
-  -webkit-mask-position: center center;
-  transition: background-color 0.5s;
-  mask-image: url('../img/settings.svg');
-  -webkit-mask-image: url('../img/settings.svg');
-  background: var(--header-text-color);
-}
-header #options:hover {
-  background: var(--header-hover-color);
-}
-header #theme-actions {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-}
-header #theme-actions div {
+header #theme-actions > div {
   mask-repeat: no-repeat;
   -webkit-mask-repeat: no-repeat;
   mask-position: center center;
@@ -141,7 +120,7 @@ header #theme-actions div {
   -webkit-mask-size: 22px 16px;
   background: var(--header-text-color);
 }
-header #theme-actions div:hover {
+header #theme-actions > div:hover {
   background: var(--header-hover-color);
 }
 header #theme-actions #themes-open-all {
@@ -155,6 +134,23 @@ header #theme-actions #themes-open-all-pin {
 header #theme-actions #themes-read-all {
   mask-image: url('../img/mass/read_all.svg');
   -webkit-mask-image: url('../img/mass/read_all.svg');
+}
+header #right-box #options {
+  width: 16px;
+  height: 16px;
+  mask-size: 16px 16px;
+  -webkit-mask-size: 16px 16px;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  mask-position: center center;
+  -webkit-mask-position: center center;
+  transition: background-color 0.5s;
+  mask-image: url('../img/settings.svg');
+  -webkit-mask-image: url('../img/settings.svg');
+  background: var(--header-text-color);
+}
+header #right-box #options:hover {
+  background: var(--header-hover-color);
 }
 main ul#topic-list {
   list-style: none;
@@ -241,9 +237,6 @@ main ul#topic-list li.one-theme:hover {
 }
 main ul#topic-list li.one-theme:hover:not(.used) .topic-title {
   color: var(--hover-color);
-  /*&.accent {
-                                color: var(--main-text-hover-color-accent);
-                            }*/
 }
 main ul#topic-list li.one-theme:not(:last-child) {
   border-bottom-width: 1px;

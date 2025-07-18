@@ -89,21 +89,24 @@ header {
     z-index: 10;
     // font-weight: 500;
 
-    .header-item {
-        cursor: pointer;
-        transition: color @transition-time;
-        &:hover {
-            color: var(--header-hover-color);
-            // scale: 1.05;
-            transform: translateY(-1px);
+    > div {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+
+        > div {
+            cursor: pointer;
+            transition: color @transition-time;
+            &:hover {
+                color: var(--header-hover-color);
+                // scale: 1.05;
+                transform: translateY(-1px);
+            }
         }
     }
 
     #counters {
-        display: flex;
-        gap: 10px;
-
-        .header-item {
+        > div {
             align-items: center;
             display: flex;
             &:not(.accent) { opacity: 0.5; }
@@ -113,7 +116,7 @@ header {
                 .icon_mask();
                 background: var(--header-text-color);
                 display: inline-block;
-                margin-right: 6px;
+                margin-right: 5px;
             }
             &:hover::before {
                 background: var(--header-hover-color);
@@ -131,21 +134,8 @@ header {
         }
     }
 
-    #options {
-        .icon_mask();
-        .icon_mask_url('../img/settings.svg');
-        background: var(--header-text-color);
-        &:hover {
-            background: var(--header-hover-color);
-        }
-    }
-
     #theme-actions {
-        display: flex;
-        flex-direction: row;
-        gap: 10px;
-
-        div {
+        > div {
             .icon_mask_mini();
             display: inline-block;
             width: 22px;
@@ -166,6 +156,17 @@ header {
         }
         #themes-read-all {
             .icon_mask_url('../img/mass/read_all.svg');
+        }
+    }
+
+    #right-box {
+        #options {
+            .icon_mask();
+            .icon_mask_url('../img/settings.svg');
+            background: var(--header-text-color);
+            &:hover {
+                background: var(--header-hover-color);
+            }
         }
     }
 }
@@ -258,9 +259,6 @@ main {
                     &:not(.used) {
                         .topic-title {
                             color: var(--hover-color);
-                            /*&.accent {
-                                color: var(--main-text-hover-color-accent);
-                            }*/
                         }
                     }
 
