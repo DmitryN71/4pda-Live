@@ -1,26 +1,36 @@
+@transition-time: 0.5s;
+@font-family: "Segoe UI", "Helvetica Neue", Helvetica, Tahoma, Arial, sans-serif;
+
 @base-color: #0072bc; 
 
-// https://mycolor.space/?hex=%230072BC&sub=1
-// https://colors.muz.li/color-palette-generator/0072bc
+// light theme
+
 @header-bg: @base-color;
-@header-text: #fff;
-@header-hover: #a7c2bf;
+@header-text: #ffffff;
+@header-hover: #cce0ff;
 
-@main-gray: #949DB0;
 @main-bg: #fff;
-@main-text: #4373c3;
-@main-accent: #1a7f5b;
-@main-hover: #35968e;
-@main-li-hover: #f0faff;
-@main-li-border: #eceef1; // lighten(@main-gray, 30%);
+@main-gray: #959da5;
+@main-text: #0056b3;
+@main-text-accent: #15803d;
+@main-text-hover: #004085;
+@main-text-hover-accent: #106232;
 
-@dark-bg: #202124;
-@dark-header-bg: darken(#4373c3, 10%); // @main-text; 1e3a5f
-@dark-li-border: lighten(@dark-bg, 10%);
-@dark-li-hover: lighten(@dark-bg, 5%);
-@dark-text: #a8c6ff; // #d2ddf1;  tint(@dark-header-bg, 80%);
-@dark-accent: #8fd3b2;
+@main-li-hover: #f8f9fa;
+@main-li-border: #e1e1e1; // lighten(@main-gray, 30%);
 
-@transition-time: 0.5s;
+// dark theme
 
-@font-family: "Segoe UI", "Helvetica Neue", Helvetica, Tahoma, Arial, sans-serif;
+@dark-header-bg: #2a4a7a;
+@dark-header-text: #cfd9f1;
+@dark-header-hover: #f9fbff;
+
+@dark-main-bg: #18191b;
+@dark-main-gray: #959da5;
+@dark-main-text: #e6ecff;
+@dark-main-text-accent: #a9d4bb;
+@dark-main-text-hover: #fbfcff;
+@dark-main-text-hover-accent: #f3faf5;
+
+@dark-main-li-hover: #222225;
+@dark-main-li-border: #383a3f;
