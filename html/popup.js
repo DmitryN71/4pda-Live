@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
 
             if (show_themes_actions_list.length) {
-                let theme_buttons = document.getElementById('theme-actions').getElementsByClassName('header-item');
+                let theme_buttons = document.getElementById('theme-actions').getElementsByTagName('div');
                 for (let button of theme_buttons) {
                     if (show_themes_actions_list.includes(button.id)) {
                         button.addEventListener('click', () => {
