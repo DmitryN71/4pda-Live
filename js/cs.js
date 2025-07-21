@@ -19,6 +19,7 @@ export let SETTINGS = {
 
     toolbar_button_open_all: true,
     toolbar_button_read_all: true,
+    toolbar_simple_list: false,
     open_themes_limit: 5,
     
     interval: 30,

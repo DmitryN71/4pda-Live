@@ -208,6 +208,25 @@ main {
                     text-overflow: ellipsis;
                 }
 
+                .mark-as-read {
+                    position: absolute;
+                    right: 8px;
+                    bottom: 3px;
+                    .icon_mask(16px, 12px);
+                    background: var(--main-gray-color);
+                    .icon_mask_url('../img/eye.svg');
+                    transition: background-color @transition-time,
+                                opacity @transition-time;
+                    opacity: 0.5;
+                    &.loading {
+                        .icon_mask_url("../img/refresh.svg");
+                    }
+                    &:hover {
+                        opacity: 1;
+                        background: var(--hover-color);
+                    }
+                }
+
                 .topic-2nd-line {
                     display: flex;
                     flex-direction: row;
@@ -220,25 +239,6 @@ main {
                         transition: color @transition-time;
                         &:hover {
                             color: var(--hover-color);
-                        }
-                    }
-
-                    .mark-as-read {
-                        position: absolute;
-                        right: 8px;
-                        bottom: 3px;
-                        .icon_mask(16px, 12px);
-                        background: var(--main-gray-color);
-                        .icon_mask_url('../img/eye.svg');
-                        transition: background-color @transition-time,
-                                    opacity @transition-time;
-                        opacity: 0.5;
-                        &.loading {
-                            .icon_mask_url("../img/refresh.svg");
-                        }
-                        &:hover {
-                            opacity: 1;
-                            background: var(--hover-color);
                         }
                     }
                 }
@@ -266,6 +266,12 @@ main {
                 &:not(:last-child) {
                     border-bottom-width: 1px;
                 }
+            }
+        }
+
+        &.simple {
+            li.one-theme {
+                padding-right: 24px;
             }
         }
     }

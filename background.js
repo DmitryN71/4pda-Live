@@ -11,6 +11,11 @@ console.debug('Background started');
 chrome.runtime.onInstalled.addListener(reason => {
     console.debug('onInstalled', reason, bg.initialized);
     // bg.init();
+    chrome.contextMenus.create({
+        title: 'Принудительное обновление',
+        id: 'update.all',
+        contexts: ["action"],
+    });
 });
 
 // Also set up the alarm if the service worker starts (in case of reload)
@@ -23,11 +28,6 @@ chrome.idle.onStateChanged.addListener(newState => {
     console.debug('idle.onStateChanged', newState, getLogDatetime());
 });
 
-chrome.contextMenus.create({
-    title: 'Принудительное обновление',
-    id: 'update.all',
-    contexts: ["action"],
-});
 chrome.contextMenus.onClicked.addListener((info, tab) => {
     switch (info.menuItemId) {
         case 'update.all':

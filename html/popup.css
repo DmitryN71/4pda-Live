@@ -184,21 +184,7 @@ main ul#topic-list li.one-theme .topic-title {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-main ul#topic-list li.one-theme .topic-2nd-line {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  font-size: 11px;
-  margin-top: 2px;
-}
-main ul#topic-list li.one-theme .topic-2nd-line .topic-last-info {
-  display: inline;
-  transition: color 0.5s;
-}
-main ul#topic-list li.one-theme .topic-2nd-line .topic-last-info:hover {
-  color: var(--hover-color);
-}
-main ul#topic-list li.one-theme .topic-2nd-line .mark-as-read {
+main ul#topic-list li.one-theme .mark-as-read {
   position: absolute;
   right: 8px;
   bottom: 3px;
@@ -217,13 +203,27 @@ main ul#topic-list li.one-theme .topic-2nd-line .mark-as-read {
   transition: background-color 0.5s, opacity 0.5s;
   opacity: 0.5;
 }
-main ul#topic-list li.one-theme .topic-2nd-line .mark-as-read.loading {
+main ul#topic-list li.one-theme .mark-as-read.loading {
   mask-image: url("../img/refresh.svg");
   -webkit-mask-image: url("../img/refresh.svg");
 }
-main ul#topic-list li.one-theme .topic-2nd-line .mark-as-read:hover {
+main ul#topic-list li.one-theme .mark-as-read:hover {
   opacity: 1;
   background: var(--hover-color);
+}
+main ul#topic-list li.one-theme .topic-2nd-line {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 11px;
+  margin-top: 2px;
+}
+main ul#topic-list li.one-theme .topic-2nd-line .topic-last-info {
+  display: inline;
+  transition: color 0.5s;
+}
+main ul#topic-list li.one-theme .topic-2nd-line .topic-last-info:hover {
+  color: var(--hover-color);
 }
 main ul#topic-list li.one-theme.used .topic-title {
   color: var(--main-gray-color);
@@ -240,6 +240,9 @@ main ul#topic-list li.one-theme:hover:not(.used) .topic-title {
 }
 main ul#topic-list li.one-theme:not(:last-child) {
   border-bottom-width: 1px;
+}
+main ul#topic-list.simple li.one-theme {
+  padding-right: 24px;
 }
 #templates {
   display: none;

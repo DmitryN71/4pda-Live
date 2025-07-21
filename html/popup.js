@@ -1,9 +1,11 @@
-const CLASS_THEME_USED = 'used';
-const CLASS_ACCENT = 'accent';
-const CLASS_LOADING = 'loading';
-const CLASS_HIDDEN = 'hidden';
+const CLASS_THEME_USED = 'used',
+      CLASS_ACCENT = 'accent',
+      CLASS_LOADING = 'loading',
+      CLASS_HIDDEN = 'hidden',
+      CLASS_SIMPLE_LIST = 'simple';
 
-let elements = {};
+let elements = {},
+    do_simple_list = false;
 
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -15,6 +17,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 window.close();
                 return;
             }
+
+            do_simple_list = response.settings.toolbar_simple_list;
             init();
             console.log('Background response:', response);
             elements.username_label.textContent = response.user_name;
@@ -113,7 +117,10 @@ function init() {
     });
     //
     elements.themesList = document.getElementById('topic-list');
-    elements.themeTPL = document.getElementById('tpl-one-topic');
+    elements.themeTPL = document.getElementById(do_simple_list ? 'tpl-one-topic-simple' : 'tpl-one-topic');
+    if (do_simple_list) {
+        elements.themesList.classList.add(CLASS_SIMPLE_LIST);
+    }
 }
 
 /**
@@ -121,16 +128,16 @@ function init() {
  */
 function add_theme_row(theme) {
     let tpl = elements.themeTPL.content.cloneNode(true),
-        tpl_li = tpl.querySelector('li'),
-        tpl_caption = tpl.querySelector('.topic-title'),
-        tpl_last_user = tpl.querySelector('.user'),
-        tpl_last_dt = tpl.querySelector('.date');
+        tpl_li = tpl.querySelector('li');
     
     tpl_li.id = `theme_${theme.id}`;
     // tpl_li.dataset.theme_id = theme.id;
-    tpl_caption.textContent = theme.title;
-    tpl_last_user.textContent = theme.last_user_name;
-    tpl_last_dt.textContent = new Date(theme.last_post_ts*1000).toLocaleString();
+    
+    tpl.querySelector('.topic-title').textContent = theme.title;
+    if (!do_simple_list) {
+        tpl.querySelector('.user').textContent = theme.last_user_name;
+        tpl.querySelector('.date').textContent = new Date(theme.last_post_ts*1000).toLocaleString();
+    }
 
     if (theme.pin) tpl_li.classList.add(CLASS_ACCENT);
     if (theme.viewed) tpl_li.classList.add(CLASS_THEME_USED);
