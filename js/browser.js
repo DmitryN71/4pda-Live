@@ -5,8 +5,8 @@ const ACTION_BUTTON_ICONS = {
 }
 
 const ACTION_BUTTON_COLORS = { // todo #HEX
-    default: '#0072bc',
-    has_qms: '#4caf50',
+    default: '#0056b3',
+    has_qms: '#15803d',
     logout: '#9e9e9e',
 }
 

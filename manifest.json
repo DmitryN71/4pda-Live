@@ -1,7 +1,7 @@
 {
 	"name": "4PDA Инспектор BETA",
-	"version": "4.0.0.0721",
-    "version_name": "4.DEV.0721",
+	"version": "4.0.0.0724",
+    "version_name": "4.DEV.0724",
 	"description": "Мониторинг изменений на форуме 4pda. THIS EXTENSION IS FOR BETA TESTING.",
 	"homepage_url": "https://4pda-inspector.github.io/4pda-inspector/",
 
@@ -25,7 +25,6 @@
 	],
 
     "icons": {
-        "16": "img/icons/icon_16.png",
         "32": "img/icons/icon_32.png",
         "48": "img/icons/icon_48.png",
         "128": "img/icons/icon_128.png"
