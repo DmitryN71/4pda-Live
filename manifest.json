@@ -1,37 +1,34 @@
 {
-	"name": "4PDA Инспектор BETA",
-	"version": "4.0.0.0724",
-    "version_name": "4.DEV.0724",
-	"description": "Мониторинг изменений на форуме 4pda. THIS EXTENSION IS FOR BETA TESTING.",
-	"homepage_url": "https://4pda-inspector.github.io/4pda-inspector/",
-
-	"manifest_version": 3,
-
+    "name": "4PDA Инспектор BETA",
+    "version": "4.0.0.250729",
+    "version_name": "4.DEV.250729",
+    "description": "Мониторинг изменений на форуме 4pda. THIS EXTENSION IS FOR BETA TESTING.",
+    "homepage_url": "https://4pda-inspector.github.io/4pda-inspector/",
+    "manifest_version": 3,
     "background": {
-		"service_worker": "background.js",
+        "service_worker": "background.js",
         "type": "module"
-	},
-	"permissions": [
-		"alarms",
-		"cookies",
-		"notifications",
-		"storage",
-		"scripting",
-		"idle",
-		"contextMenus"
-	],
-	"host_permissions": [
-		"https://4pda.to/"
-	],
-
+    },
+    "permissions": [
+        "alarms",
+        "cookies",
+        "notifications",
+        "storage",
+        "scripting",
+        "idle",
+        "contextMenus"
+    ],
+    "host_permissions": [
+        "https://4pda.to/"
+    ],
     "icons": {
         "32": "img/icons/icon_32.png",
         "48": "img/icons/icon_48.png",
         "128": "img/icons/icon_128.png"
     },
-	"action": {
-		"default_title": "4PDA Инспектор",
-		"default_icon": "img/icons/icon_19_out.png"
-	},
-	"options_page": "html/options.html"
+    "action": {
+        "default_title": "4PDA Инспектор",
+        "default_icon": "img/icons/icon_19_out.png"
+    },
+    "options_page": "html/options.html"
 }
