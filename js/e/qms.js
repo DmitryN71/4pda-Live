@@ -9,7 +9,7 @@ export class QMS extends AbstractEntity {
 
     process_line(line) {
         let dialog = new Dialog(line),
-            current_dialog = this.get[dialog.id],
+            current_dialog = this.get(dialog.id),
             n_level = 100;
 
         if (current_dialog) {
