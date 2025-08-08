@@ -31,14 +31,14 @@ class AbstractReleaser:
         self._prepare_data()
 
     def __read_manifest(self) -> Dict:
-        with open(ROOT_DIR / "manifest.json", "r") as f:
+        with open(ROOT_DIR / "manifest.json", "r", encoding='utf-8') as f:
             manifest = json.load(f)
             assert all(key in manifest for key in ('name', 'version', 'description')), 'Invalid Manifest'
             return manifest
 
     def __read_config(self) -> Tuple[List, Dict]:
         config = ConfigParser()
-        config.read(SCRIPT_DIR / "data.ini")
+        config.read(SCRIPT_DIR / "data.ini", encoding='utf-8')
         config_data = dict(config['MAIN'])
         assert all(key in config_data for key in ('name', 'version', 'description')), 'Invalid Config'
 
@@ -106,7 +106,7 @@ class BetaReleaser(AbstractReleaser):
         self._config['description'] += " THIS EXTENSION IS FOR BETA TESTING."
         while len(self._version) < 4:
             self._version.append('0')
-        self._version[3] = datetime.now().strftime("%y%m%d")
+        self._version[3] = datetime.now().strftime("%m%d")
         self._config['version'] = '.'.join(self._version)
         self._config['version_name'] = f"{self._version[0]}.DEV.{self._version[3]}"
 
