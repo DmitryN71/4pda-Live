@@ -62,5 +62,8 @@ export async function open_url(url, set_active = true) {
     return chrome.tabs.create({
         url: url,
         active: set_active
+    }).then(tab => {
+        chrome.windows.update(tab.windowId, { focused: true });
+        return tab;
     });
 }
