@@ -55,8 +55,11 @@ class Mention {
         });
     }
 
-    open() {
-        return open_url(`https://4pda.to/forum/index.php?showtopic=${this.topic_id}&view=findpost&p=${this.post_id}`);
+    async open() {
+        return open_url(`https://4pda.to/forum/index.php?showtopic=${this.topic_id}&view=findpost&p=${this.post_id}`)
+            .then(tab => {
+                return [tab, this];
+            });
     }
 
 }

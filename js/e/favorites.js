@@ -23,10 +23,12 @@ export class Favorites extends AbstractEntity {
         return super.list.filter(theme => !theme.viewed);
     }
 
+    /**  @returns {FavoriteTheme[]} */
     get list_pin() {
         return super.list.filter(theme => !theme.viewed && theme.pin);
     }
 
+    /**  @returns {FavoriteTheme[]} */
     get list() {
         return this.#list_filtered.sort(
             SETTINGS.toolbar_pin_themes_level == 10
@@ -135,7 +137,7 @@ export class FavoriteTheme {
                 if (is_last_page.result) {
                     this.#cs.update_action();
                 }
-                return is_last_page.result;
+                return [tab, this];
             });
         });
     }

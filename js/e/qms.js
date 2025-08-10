@@ -52,7 +52,10 @@ class Dialog {
         });
     }
 
-    open() {
-        return open_url(`https://4pda.to/forum/index.php?act=qms&mid=${this.opponent_id}&t=${this.id}`);
+    async open() {
+        return open_url(`https://4pda.to/forum/index.php?act=qms&mid=${this.opponent_id}&t=${this.id}`)
+            .then(tab => {
+                return [tab, this];
+            });
     }
 }

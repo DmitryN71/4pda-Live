@@ -111,8 +111,8 @@ chrome.runtime.onConnect.addListener(async (port) => {
             let count_TPA = 0;
             for (let theme of bg.favorites.list) {
                 theme.open(false, false)
-                    .then((is_last_page) => {
-                        if (is_last_page) {
+                    .then(([tab, theme]) => {
+                        if (theme.viewed) {
                             port.postMessage({
                                 id: theme.id,
                                 count: bg.favorites.count,
@@ -126,8 +126,8 @@ chrome.runtime.onConnect.addListener(async (port) => {
             let count_TPAP = 0;
             for (let theme of bg.favorites.list_pin) {
                 theme.open(false, false)
-                    .then((is_last_page) => {
-                        if (is_last_page) {
+                    .then(([tab, theme]) => {
+                        if (theme.viewed) {
                             port.postMessage({
                                 id: theme.id,
                                 count: bg.favorites.count,
@@ -147,7 +147,10 @@ chrome.notifications.onClicked.addListener(notificationId => {
     const n_data = notificationId.split('/');
     switch (n_data[1]) {
         case 'theme':
-            bg.favorites.open(n_data[2]);
+            bg.favorites.open(n_data[2])
+                .then(([tab, theme]) => {
+                    chrome.windows.update(tab.windowId, { focused: true });
+                });
             break;
         case 'dialog':
             bg.qms.open(n_data[2]);
