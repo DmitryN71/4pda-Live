@@ -159,6 +159,7 @@ chrome.notifications.onClicked.addListener(notificationId => {
             bg.mentions.open(n_data[2]);
             break;
     }
+    chrome.notifications.clear(notificationId);
 });
 
 chrome.action.onClicked.addListener(tab => {
