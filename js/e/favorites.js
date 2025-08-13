@@ -123,11 +123,11 @@ export class FavoriteTheme {
         return open_url(
             `https://4pda.to/forum/index.php?showtopic=${this.id}&view=${view}`,
             set_active
-        ).then((tab) => {
+        ).then(async (tab) => {
             //console.debug(tab);
-            return chrome.scripting.executeScript({
+            await chrome.scripting.executeScript({
                 target: { tabId: tab.id },
-                function: () => {
+                func: () => {
                     // check is last page
                     return document.querySelector('span.pagecurrent-wa') != null && document.querySelector('span.pagecurrent-wa + span.pagelink') == null;
                 }
@@ -137,8 +137,11 @@ export class FavoriteTheme {
                 if (is_last_page.result) {
                     this.#cs.update_action();
                 }
-                return [tab, this];
+            }).catch((error) => {
+                console.error(error);
             });
+            
+            return [tab, this];
         });
     }
 
