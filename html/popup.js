@@ -5,7 +5,8 @@ const CLASS_THEME_USED = 'used',
       CLASS_SIMPLE_LIST = 'simple';
 
 let elements = {},
-    do_simple_list = false;
+    do_simple_list = false,
+    close_on_open_theme = true;
 
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
 
             do_simple_list = response.settings.toolbar_simple_list;
+            close_on_open_theme = response.settings.toolbar_open_theme_hide;
             init();
             console.log('Background response:', response);
             elements.username_label.textContent = response.user_name;
@@ -90,30 +92,38 @@ function create_port(name) {
     return port;
 }
 
+function open_tab(what, extra = null) {
+    const message = {action: 'open_url', what: what};
+    chrome.runtime.sendMessage(extra ? {...message, ...extra} : message)
+        .then(() => {
+            if (close_on_open_theme) window.close();
+        });
+}
+
 
 function init() {
     elements.username_label = document.getElementById('user-name');
     elements.username_label.addEventListener("click", () => {
-        chrome.runtime.sendMessage({action: 'open_url', what: 'user'});
+        open_tab('user');
     });
 
     document.getElementById('options').addEventListener('click', () => {
-        chrome.runtime.sendMessage({action: 'open_url', what: 'options'});
+        open_tab('options');
     });
 
     elements.qmsBox = document.getElementById('header-qms');
     elements.qmsBox.addEventListener("click", () => {
-        chrome.runtime.sendMessage({action: 'open_url', what: 'qms'});
+        open_tab('qms');
     });
 
     elements.favoritesBox = document.getElementById('header-favorites');
     elements.favoritesBox.addEventListener("click", () => {
-        chrome.runtime.sendMessage({action: 'open_url', what: 'favorites'});
+        open_tab('favorites');
     });
 
     elements.mentionsBox = document.getElementById('header-mentions');
     elements.mentionsBox.addEventListener("click", () => {
-        chrome.runtime.sendMessage({action: 'open_url', what: 'mentions'});
+        open_tab('mentions');
     });
     //
     elements.themesList = document.getElementById('topic-list');
@@ -146,9 +156,7 @@ function add_theme_row(theme) {
         let current = el.target;
         if (current.classList.contains('tli')) {
             tpl_li.classList.add(CLASS_THEME_USED);
-            chrome.runtime.sendMessage({
-                action: 'open_url',
-                what: 'favorites',
+            open_tab('favorites', {
                 id: theme.id,
                 view: 'getlastpost'
             });
@@ -167,9 +175,7 @@ function add_theme_row(theme) {
             });
         } else {
             tpl_li.classList.add(CLASS_THEME_USED);
-            chrome.runtime.sendMessage({
-                action: 'open_url',
-                what: 'favorites',
+            open_tab('favorites', {
                 id: theme.id
             });
         }
