@@ -144,20 +144,18 @@ chrome.runtime.onConnect.addListener(async (port) => {
 // https://developer.chrome.com/docs/extensions/reference/api/notifications#type-NotificationOptions
 chrome.notifications.onClicked.addListener(notificationId => {
     console.debug('notification_click', notificationId);
-    const n_data = notificationId.split('/');
-    switch (n_data[1]) {
-        case 'theme':
-            bg.favorites.open(n_data[2])
-                .then(([tab, theme]) => {
-                    chrome.windows.update(tab.windowId, { focused: true });
-                });
-            break;
-        case 'dialog':
-            bg.qms.open(n_data[2]);
-            break;
-        case 'mention':
-            bg.mentions.open(n_data[2]);
-            break;
+    const n_data = notificationId.split('/'),
+        funcs = {
+            theme: (id) => bg.favorites.open(id),
+            dialog: (id) => bg.qms.open(id),
+            mention: (id) => bg.mentions.open(id),
+        };
+
+    if (n_data[1] in funcs) {
+        funcs[n_data[1]](n_data[2])
+            .then(([tab, entity]) => {
+                chrome.windows.update(tab.windowId, { focused: true });
+            });
     }
     chrome.notifications.clear(notificationId);
 });
