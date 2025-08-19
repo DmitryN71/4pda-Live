@@ -53,7 +53,7 @@ class Dialog {
     }
 
     async open() {
-        return open_url(`https://4pda.to/forum/index.php?act=qms&mid=${this.opponent_id}&t=${this.id}`)
+        return open_url(`https://4pda.to/forum/index.php?act=qms&mid=${this.opponent_id}&t=${this.id}`, true, false)
             .then(tab => {
                 return [tab, this];
             });

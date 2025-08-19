@@ -56,7 +56,7 @@ class Mention {
     }
 
     async open() {
-        return open_url(`https://4pda.to/forum/index.php?showtopic=${this.topic_id}&view=findpost&p=${this.post_id}`)
+        return open_url(`https://4pda.to/forum/index.php?showtopic=${this.topic_id}&view=findpost&p=${this.post_id}`, true, false)
             .then(tab => {
                 return [tab, this];
             });

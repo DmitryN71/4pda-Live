@@ -122,7 +122,8 @@ export class FavoriteTheme {
         view = view || 'getnewpost';
         return open_url(
             `https://4pda.to/forum/index.php?showtopic=${this.id}&view=${view}`,
-            set_active
+            set_active,
+            false
         ).then(async (tab) => {
             //console.debug(tab);
             await chrome.scripting.executeScript({

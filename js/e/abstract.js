@@ -42,7 +42,7 @@ export class AbstractEntity {
                 console.warn('Entity not found:', id);
             }
         } else {
-            return open_url(`https://4pda.to/forum/index.php?act=${this.ACT_CODE_FORUM}`);
+            return open_url(`https://4pda.to/forum/index.php?act=${this.ACT_CODE_FORUM}`, true, true);
         }
     }
 
