@@ -3,9 +3,20 @@ import { AbstractEntity } from "./abstract.js";
 import { SETTINGS } from '../cs.js'
 
 
+const MENTIONS_NOTIFICATION_KEY_REGEX = /^(\d+)_(\d+)$/;
+
+
 export class Mentions extends AbstractEntity {
     ACT_CODE_API = 'mentions-list';
     ACT_CODE_FORUM = 'mentions';
+
+    _open(id) {
+        const id2 = id.match(MENTIONS_NOTIFICATION_KEY_REGEX);
+        if (id2 && id2.length == 3) {
+            return Mention.just_open(id2[1], id2[2]);
+        }
+        throw new Error('Invalid mention id: ' + id);
+    }
 
     process_line(line) {
         let mention = new Mention(line),
@@ -39,9 +50,6 @@ class Mention {
         return `${this.topic_id}_${this.post_id}`;
     }
 
-    // deprecated
-    get key() { return this.id; }
-
     notification() {
         return chrome.notifications.create(
             `${this.timestamp}/mention/${this.id}`
@@ -55,8 +63,16 @@ class Mention {
         });
     }
 
+    static just_open(theme_id, post_id, set_active = true) {
+        return open_url(
+            `https://4pda.to/forum/index.php?showtopic=${theme_id}&view=findpost&p=${post_id}`,
+            set_active,
+            false
+        );
+    }
+
     async open() {
-        return open_url(`https://4pda.to/forum/index.php?showtopic=${this.topic_id}&view=findpost&p=${this.post_id}`, true, false)
+        return this.constructor.just_open(this.id, this.post_id)
             .then(tab => {
                 return [tab, this];
             });

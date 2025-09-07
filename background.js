@@ -153,7 +153,7 @@ chrome.notifications.onClicked.addListener(notificationId => {
 
     if (n_data[1] in funcs) {
         funcs[n_data[1]](n_data[2])
-            .then(([tab, entity]) => {
+            .then((tab) => {
                 chrome.windows.update(tab.windowId, { focused: true });
             });
     }

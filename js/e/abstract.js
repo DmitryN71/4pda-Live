@@ -2,6 +2,9 @@ import { fetch4, parse_response } from "../utils.js";
 import { open_url } from '../browser.js';
 
 
+class EntityNotFoundError extends Error {}
+
+
 export class AbstractEntity {
     ACT_CODE_API = '';
     ACT_CODE_FORUM = '';
@@ -33,13 +36,20 @@ export class AbstractEntity {
         this.notify = false;
     }
 
+    _open(id) {
+        throw new EntityNotFoundError('Entity not found: ' + id);
+    }
+
     async open(id, ...args) {
         if (id) {
             let entity = this._list[id];
             if (entity) {
-                return entity.open(...args);
+                return entity.open(...args)
+                    .then(([tab, entity]) => {
+                        return tab;
+                    });
             } else {
-                console.warn('Entity not found:', id);
+                return this._open(id);
             }
         } else {
             return open_url(`https://4pda.to/forum/index.php?act=${this.ACT_CODE_FORUM}`, true, true);

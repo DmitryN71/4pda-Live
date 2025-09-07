@@ -54,6 +54,10 @@ export class Favorites extends AbstractEntity {
         }
     }
 
+    _open(id) {
+        return FavoriteTheme.just_open(id);
+    }
+
     process_line(line) {
         let theme = new FavoriteTheme(line, this.cs),
             current_theme = this.get(theme.id),
@@ -113,37 +117,39 @@ export class FavoriteTheme {
             'eventTime': this.last_post_ts*1000,
             'iconUrl': 'img/icons/icon_80_favorite.png',
             'type': 'basic'
-        }/*, notificationId => {
-            console.debug('notification_created', notificationId);
-        }*/);
+        });
+    }
+
+    static just_open(id, view = 'getnewpost', set_active = true) {
+        return open_url(
+            `https://4pda.to/forum/index.php?showtopic=${id}&view=${view}`,
+            set_active,
+            false
+        );
     }
 
     async open(view, set_active = true) {
-        view = view || 'getnewpost';
-        return open_url(
-            `https://4pda.to/forum/index.php?showtopic=${this.id}&view=${view}`,
-            set_active,
-            false
-        ).then(async (tab) => {
-            //console.debug(tab);
-            await chrome.scripting.executeScript({
-                target: { tabId: tab.id },
-                func: () => {
-                    // check is last page
-                    return document.querySelector('span.pagecurrent-wa') != null && document.querySelector('span.pagecurrent-wa + span.pagelink') == null;
-                }
-            }).then(([is_last_page]) => {
-                console.debug('Is last theme page:', is_last_page.result, this.id);
-                this.viewed = is_last_page.result;
-                if (is_last_page.result) {
-                    this.#cs.update_action();
-                }
-            }).catch((error) => {
-                console.error(error);
+        return this.constructor.just_open(this.id, view, set_active)
+            .then(async (tab) => {
+                //console.debug(tab);
+                await chrome.scripting.executeScript({
+                    target: { tabId: tab.id },
+                    func: () => {
+                        // check is last page
+                        return document.querySelector('span.pagecurrent-wa') != null && document.querySelector('span.pagecurrent-wa + span.pagelink') == null;
+                    }
+                }).then(([is_last_page]) => {
+                    console.debug('Is last theme page:', is_last_page.result, this.id);
+                    if (is_last_page.result) {
+                        this.viewed = true;
+                        this.#cs.update_action();
+                    }
+                }).catch((error) => {
+                    console.error(error);
+                });
+                
+                return [tab, this];
             });
-            
-            return [tab, this];
-        });
     }
 
     async read() {
