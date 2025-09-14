@@ -9,6 +9,10 @@ export class AbstractEntity {
     ACT_CODE_API = '';
     ACT_CODE_FORUM = '';
     
+    /**
+     * @typedef {import('../cs.js').CS} CS
+     * @param {CS} cs 
+     */
     constructor(cs) {
         this.cs = cs;
         this._list = {};
@@ -40,6 +44,7 @@ export class AbstractEntity {
         throw new EntityNotFoundError('Entity not found: ' + id);
     }
 
+    /** @returns {Promise<Tab>} */
     async open(id, ...args) {
         if (id) {
             let entity = this._list[id];

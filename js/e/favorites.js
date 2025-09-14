@@ -63,6 +63,7 @@ export class Favorites extends AbstractEntity {
             current_theme = this.get(theme.id),
             n_level = 100;
 
+        if (theme.last_user_id == this.cs.user_id) return;
         if (SETTINGS.toolbar_pin_themes_level == 20 && !theme.pin) return;
 
         if (current_theme) {
@@ -97,7 +98,7 @@ export class FavoriteTheme {
         this.id = obj[0];
         this.title = obj[1];
         // this.posts_num = obj[2];
-        // this.last_user_id = obj[3];
+        this.last_user_id = obj[3];
         this.last_user_name = obj[4];
         this.last_post_ts = obj[5];
         // this.last_read_ts = obj[6];
