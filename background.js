@@ -3,25 +3,56 @@ import {CS, SETTINGS} from './js/cs.js';
 import {open_url} from './js/browser.js';
 import {getLogDatetime} from "./js/utils.js";
 
-
+const ALARM_NAME = 'periodicUpdate';
 const bg = new CS();
 console.debug('Background started');
 
-// Set up the alarm when the service worker starts
+// Initialize alarm on install
 chrome.runtime.onInstalled.addListener(reason => {
-    console.debug('onInstalled', reason, bg.initialized);
-    // bg.init();
+    console.debug('onInstalled', reason.reason);
+    
+    // Create context menu
     chrome.contextMenus.create({
         title: 'Принудительное обновление',
         id: 'update.all',
         contexts: ["action"],
     });
+    
+    // Initialize alarm immediately
+    initializeAlarm();
 });
 
-// Also set up the alarm if the service worker starts (in case of reload)
+// Reinitialize alarm on browser startup
 chrome.runtime.onStartup.addListener(() => {
-    console.debug('onStartup', bg.initialized);
-    // bg.init();
+    console.debug('onStartup');
+    initializeAlarm();
+});
+
+// Function to create/update the alarm
+function initializeAlarm() {
+    // Clear existing alarm first
+    chrome.alarms.clear(ALARM_NAME, (wasCleared) => {
+        console.debug('Alarm cleared:', wasCleared);
+        
+        // Get current interval setting (minimum 1 minute)
+        const intervalMinutes = Math.max(SETTINGS.interval / 60, 1.0);
+        
+        // Create new alarm
+        chrome.alarms.create(ALARM_NAME, {
+            delayInMinutes: 1.0, // Start in 1 minute
+            periodInMinutes: intervalMinutes
+        });
+        
+        console.debug('Alarm created with period:', intervalMinutes, 'minutes');
+    });
+}
+
+// Listen to alarm events
+chrome.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name === ALARM_NAME) {
+        console.debug('Alarm fired:', alarm.name, getLogDatetime());
+        bg.update();
+    }
 });
 
 chrome.idle.onStateChanged.addListener(newState => {
@@ -31,10 +62,9 @@ chrome.idle.onStateChanged.addListener(newState => {
 chrome.contextMenus.onClicked.addListener((info, tab) => {
     switch (info.menuItemId) {
         case 'update.all':
-            bg.reset_timeout();
+            bg.update(); // Force immediate update
             break;
     }
-    // console.log(info, tab);
 });
 
 // Listen for messages from popup or other extension parts
@@ -95,12 +125,35 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 chrome.runtime.onConnect.addListener(async (port) => {
     console.debug('onConnect', port.name);
+    
+    // Проверка что порт всё ещё подключен
+    const isPortConnected = () => {
+        try {
+            // Попытка получить доступ к свойству порта
+            return port.name !== undefined;
+        } catch (e) {
+            return false;
+        }
+    };
+
+    // Безопасная отправка сообщения через порт
+    const safePostMessage = (msg) => {
+        try {
+            if (isPortConnected()) {
+                port.postMessage(msg);
+                return true;
+            }
+        } catch (e) {
+            console.warn('Port disconnected, cannot send message:', e);
+        }
+        return false;
+    };
 
     switch (port.name) {
         case 'themes-read-all':
             for (let theme of bg.favorites.list) {
                 if (await theme.read()) {
-                    port.postMessage({
+                    safePostMessage({
                         id: theme.id,
                         count: bg.favorites.count,
                     });
@@ -113,12 +166,13 @@ chrome.runtime.onConnect.addListener(async (port) => {
                 theme.open(false, false)
                     .then(([tab, theme]) => {
                         if (theme.viewed) {
-                            port.postMessage({
+                            safePostMessage({
                                 id: theme.id,
                                 count: bg.favorites.count,
                             });
                         }
-                    });
+                    })
+                    .catch(err => console.warn('Error opening theme:', err));
                 if (++count_TPA >= SETTINGS.open_themes_limit) break;
             }
             break;
@@ -128,20 +182,24 @@ chrome.runtime.onConnect.addListener(async (port) => {
                 theme.open(false, false)
                     .then(([tab, theme]) => {
                         if (theme.viewed) {
-                            port.postMessage({
+                            safePostMessage({
                                 id: theme.id,
                                 count: bg.favorites.count,
                             });
                         }
-                    });
+                    })
+                    .catch(err => console.warn('Error opening pinned theme:', err));
                 if (++count_TPAP >= SETTINGS.open_themes_limit) break;
             }
             break;
     }
-    // port.disconnect();
+    
+    // Обработчик отключения порта
+    port.onDisconnect.addListener(() => {
+        console.debug('Port disconnected:', port.name);
+    });
 });
 
-// https://developer.chrome.com/docs/extensions/reference/api/notifications#type-NotificationOptions
 chrome.notifications.onClicked.addListener(notificationId => {
     console.debug('notification_click', notificationId);
     const n_data = notificationId.split('/'),
@@ -153,9 +211,10 @@ chrome.notifications.onClicked.addListener(notificationId => {
 
     if (n_data[1] in funcs) {
         funcs[n_data[1]](n_data[2])
-            .then((tab) => {
+            .then(([tab, entity]) => {
                 chrome.windows.update(tab.windowId, { focused: true });
-            });
+            })
+            .catch(err => console.error('Error handling notification click:', err));
     }
     chrome.notifications.clear(notificationId);
 });
@@ -187,7 +246,8 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
                 }
                 break;
             case 'interval':
-                bg.reset_timeout();
+                // Recreate alarm with new interval
+                initializeAlarm();
                 break;
         }
     }

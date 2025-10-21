@@ -1,35 +1,24 @@
 {
-    "name": "4PDA Инспектор BETA",
-    "version": "4.0.2.0907",
-    "version_name": "4.DEV.0907",
-    "description": "Мониторинг изменений на форуме 4pda. THIS EXTENSION IS FOR BETA TESTING.",
-    "homepage_url": "https://4pda-inspector.github.io/4pda-inspector/",
-    "manifest_version": 3,
-    "background": {
-        "service_worker": "background.js",
-        "type": "module"
-    },
-    "permissions": [
-        "alarms",
-        "cookies",
-        "notifications",
-        "storage",
-        "scripting",
-        "idle",
-        "contextMenus",
-        "tabs"
-    ],
-    "host_permissions": [
-        "https://4pda.to/"
-    ],
-    "icons": {
-        "32": "img/icons/icon_32.png",
-        "48": "img/icons/icon_48.png",
-        "128": "img/icons/icon_128.png"
-    },
-    "action": {
-        "default_title": "4PDA Инспектор",
-        "default_icon": "img/icons/icon_19_out.png"
-    },
-    "options_page": "html/options.html"
+   "action": {
+      "default_icon": "img/icons/icon_19_out.png",
+      "default_title": "4PDA Live"
+   },
+   "background": {
+      "service_worker": "background.js",
+      "type": "module"
+   },
+   "description": "Следим за любимыми темами на 4PDA! Мгновенные уведомления о новых ответах, QMS и упоминаниях.",
+   "homepage_url": "https://4pda.to/",
+   "host_permissions": [ "https://4pda.to/" ],
+   "icons": {
+      "128": "img/icons/icon_128.png",
+      "32": "img/icons/icon_32.png",
+      "48": "img/icons/icon_48.png"
+   },
+   "manifest_version": 3,
+   "name": "4PDA Live",
+   "options_page": "html/options.html",
+   "permissions": [ "alarms", "cookies", "notifications", "storage", "scripting", "idle", "contextMenus", "tabs" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "1.0.0"
 }

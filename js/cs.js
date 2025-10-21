@@ -4,73 +4,31 @@ import { Mentions } from "./e/mentions.js";
 import { QMS } from "./e/qms.js";
 import { print_count, print_logout, print_unavailable } from "./browser.js";
 
-
-const ALARM_NAME = 'periodicApiCheck';
 const PARSE_APPBK_REGEXP = /u\d+:\d+:\d+:(\d+)/;
 
 export let SETTINGS = {
     notification_qms_level: 10,
     notification_themes_level: 10,
     notification_mentions_level: 20,
-
     toolbar_pin_themes_level: 0,
-    // toolbar_only_pin: false,
     toolbar_open_theme_hide: true,
-
     toolbar_button_open_all: true,
     toolbar_button_read_all: true,
     toolbar_simple_list: false,
     open_themes_limit: 5,
-    
     interval: 30,
-
-    /*notification_qms_popup: true,
-    notification_qms_all_messages: false,
-    notification_themes_popup: true,
-    notification_themes_all_comments: false,
-    notification_mentions_popup: true*/
-
-    /*interval: 30,
-    open_themes_limit: 0,
-
-    notification_sound_volume: 0.5,
-
-    notification_themes_sound: true,
-
-    notification_qms_sound: true,
-
-    notification_mentions_sound: true,
-
-    toolbar_pin_color: true,
-    toolbar_pin_up: false,
-    toolbar_simple_list: false,
-
-    toolbar_button_open_all: true,
-    toolbar_button_read_all: true,
-
-    toolbar_width_fixed: false,
-    toolbar_width: 400,
-    toolbar_theme: 'auto',
-
-    open_in_current_tab: false,
-    user_links: [],
-
-    build: 0*/
-    //, setting1: false
 }
-
 
 export class CS {
     #initialized = false;
     #update_in_process = false;
-    #timeout_id = null;
-
     #cookie_authorized = false;
     #available = true;
-
     #user_id = 0;
     #user_name = '';
     #last_event = 0;
+    #rate_limit_count = 0; // Счётчик 429 ошибок
+    #backoff_until = 0; // Timestamp до которого не делать запросы
 
     constructor() {
         console.log('Start CS', getLogDatetime());
@@ -78,9 +36,6 @@ export class CS {
         this.favorites = new Favorites(this);
         this.qms = new QMS(this);
         this.mentions = new Mentions(this);
-
-        // clear from old alarms; todo delete from prod
-        chrome.alarms.clear(ALARM_NAME);
 
         chrome.storage.local.get(Object.keys(SETTINGS))
             .then((items) => {
@@ -92,7 +47,6 @@ export class CS {
                     } else {
                         to_save[key] = value;
                     }
-                    // console.debug(`${key}: ${value}`, key in items);
                 }
                 if (Object.keys(to_save).length) {
                     chrome.storage.local.set(to_save, () => {
@@ -108,7 +62,6 @@ export class CS {
 
                             this.#get_cookie_member_id()
                                 .then(member_id => {
-                                    //console.debug('Check auth cookie:', member_id, getLogDatetime());
                                     if (this.#cookie_authorized == (member_id != null)) return;
 
                                     if (member_id) {
@@ -117,27 +70,27 @@ export class CS {
                                         this.update();
                                     } else {
                                         console.debug('! Auth lost');
-                                        clearTimeout(this.#timeout_id);
                                         this.#do_logout();
                                         this.#cookie_authorized = false;
                                     }
                                 });
                         }, 1000);
 
-                        this.#cookie_authorized  = start_member_id != null;
+                        this.#cookie_authorized = start_member_id != null;
                         return this.#cookie_authorized
                     });
             })
             .then(auth => {
                 console.debug('CS initialized; auth: ', auth);
                 if (auth) {
-                    this.update();
+                    // Небольшая задержка перед первым обновлением
+                    setTimeout(() => this.update(), 2000);
                 } else {
                     this.#do_logout();
                 }
             })
             .finally(() => {
-                this.#initialized = true; // ? todo after save settings?
+                this.#initialized = true;
             });
     }
 
@@ -159,17 +112,15 @@ export class CS {
 
     reset_timeout() {
         if (this.#update_in_process) {
-            console.debug('SET INTERVAL: Update conflict. Skip.')
+            console.debug('Update already in progress. Skip.')
             return;
         }
-        clearTimeout(this.#timeout_id);
         this.update();
     }
 
     get initialized() { return this.#initialized; }
     get available() { return this.#available; }
     get user_id() { return this.#user_id; }
-    
 
     get popup_data() {
         return {
@@ -197,20 +148,34 @@ export class CS {
     }
 
     async update() {
-        console.debug('* Start new update:', getLogDatetime(), this.#timeout_id);
+        console.debug('* Start new update:', getLogDatetime());
+        
         if (!this.#cookie_authorized) {
             console.debug('Hasn\'t cookie. Skip.')
             return;
         }
+        
         if (this.#update_in_process) {
             console.debug('Update conflict. Skip.')
             return;
         }
-        let next_interval = SETTINGS.interval * 1000;
+
+        // Проверяем backoff
+        const now = Date.now();
+        if (now < this.#backoff_until) {
+            const waitSeconds = Math.ceil((this.#backoff_until - now) / 1000);
+            console.warn(`⏸️ Rate limit backoff active. Waiting ${waitSeconds}s...`);
+            return;
+        }
+
         this.#update_in_process = true;
 
         return fetch4('https://4pda.to/forum/index.php?act=inspector&CODE=id')
             .then(data => {
+                // Успешный запрос - сбрасываем счётчик
+                this.#rate_limit_count = 0;
+                this.#backoff_until = 0;
+
                 let user_data = parse_response(data);
                 if (user_data && user_data.length == 2) {
                     if (user_data[0] == this.#user_id) {
@@ -232,16 +197,28 @@ export class CS {
                 }
             })
             .catch(error => {
-                this.#available = false;
-                print_unavailable();
-                console.error('API request failed:', error);
-                next_interval = 5000;
+                const errorStr = String(error);
+                console.error('API request failed:', errorStr);
+                
+                // Проверяем на 429
+                if (errorStr.includes('429')) {
+                    this.#rate_limit_count++;
+                    
+                    // Экспоненциальная задержка: 1 мин, 5 мин, 15 мин, 30 мин
+                    const backoffMinutes = Math.min(Math.pow(5, this.#rate_limit_count - 1), 30);
+                    this.#backoff_until = Date.now() + (backoffMinutes * 60 * 1000);
+                    
+                    console.warn(`⚠️ Rate limit (429) #${this.#rate_limit_count}. Пауза на ${backoffMinutes} минут до ${new Date(this.#backoff_until).toLocaleTimeString()}`);
+                    
+                    // Сайт доступен, просто ограничение
+                    this.#available = true;
+                } else {
+                    // Другие ошибки - сайт недоступен
+                    this.#available = false;
+                    print_unavailable();
+                }
             })
             .finally(() => {
-                this.#timeout_id = setTimeout(
-                    () => this.update(),
-                    next_interval
-                );
                 this.#update_in_process = false;
             });
     }
@@ -256,10 +233,6 @@ export class CS {
         )
             .then(response => response.text())
             .then(data => {
-                /*if (!this.qms.notify || Math.random() < 0.5) {
-                    this.qms.notify = true;
-                    throw new Error('Simulated error');
-                }*/
                 if (data) {
                     let parsed = data.match(PARSE_APPBK_REGEXP);
                     if (parsed) {
@@ -274,12 +247,11 @@ export class CS {
                                 return true;
                             });
                     }
-                } // else: no new events
+                }
                 return false;
             })
             .then(has_updates => {
                 console.debug('Update done', has_updates, this.#available, getLogDatetime());
-                // if (has_updates || !this.#available || !notify) {}
                 this.update_action();
                 this.#available = true;
             });

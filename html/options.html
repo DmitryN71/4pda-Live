@@ -2,76 +2,316 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Настройки 4PDA Инспектора</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройки 4PDA Live</title>
     <link rel="stylesheet" href="options.css">
 </head>
 <body>
-    <header>
-        <h1>Настройки 4PDA Инспектора</h1>
-    </header>
-    <main>
-        <h3>Интервал обновления</h3>
-        <input type="range" id="interval" min="0" step="1">
-        <span id="interval_output"></span>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>4PDA Live</h1>
+            <div class="header-subtitle">Настройки расширения</div>
+        </header>
 
-        <h3>Сообщения (QMS)</h3>
+        <!-- Main Content -->
+        <div class="main-wrapper">
+            <!-- Sidebar Navigation -->
+            <nav class="sidebar">
+                <div class="nav-item active" data-section="notifications">
+                    <span class="nav-text">Уведомления</span>
+                </div>
+                <div class="nav-item" data-section="interval-settings">
+                    <span class="nav-text">Интервал обновления</span>
+                </div>
+                <div class="nav-item" data-section="behavior">
+                    <span class="nav-text">Поведение</span>
+                </div>
+                <div class="nav-item" data-section="about">
+                    <span class="nav-text">О программе</span>
+                </div>
+            </nav>
 
-        <fieldset id="notification_qms_level">
-            <legend>Всплывающие сообщения</legend>
-            <label><input type="radio" name="notification_qms_level" value="20">Все сообщения</label>
-            <label><input type="radio" name="notification_qms_level" value="10">Новые диалоги</label>
-            <label><input type="radio" name="notification_qms_level" value="0">Не оповещать</label>
-        </fieldset>
+            <!-- Content Area -->
+            <main class="content">
+                <!-- Auto-save indicator -->
+                <div class="save-indicator" id="saveIndicator">
+                    <span class="save-icon">✓</span>
+                    <span class="save-text">Сохранено</span>
+                </div>
 
-        <h3>Темы</h3>
+                <!-- Notifications Section -->
+                <section class="content-section active" id="notifications">
+                    <h2 class="section-title">Уведомления</h2>
+                    <p class="section-description">Настройте всплывающие уведомления для разных типов событий</p>
 
-        <fieldset id="toolbar_pin_themes_level">
-            <legend>Закреплённые темы</legend>
-            <label><input type="radio" name="toolbar_pin_themes_level" value="20">Показывать только закреплённые темы</label>
-            <label><input type="radio" name="toolbar_pin_themes_level" value="10">Выводить сверху в попапе</label>
-            <label><input type="radio" name="toolbar_pin_themes_level" value="0">Только выделять цветом</label>
-        </fieldset>
+                    <!-- QMS Card -->
+                    <div class="settings-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Сообщения (QMS)</h3>
+                            <p class="card-description">Личные сообщения на форуме</p>
+                        </div>
+                        <div class="card-content">
+                            <fieldset id="notification_qms_level" class="radio-group">
+                                <label class="radio-card">
+                                    <input type="radio" name="notification_qms_level" value="20">
+                                    <span class="radio-content">
+                                        <span class="radio-title">Все сообщения</span>
+                                        <span class="radio-description">Уведомления о каждом новом сообщении</span>
+                                    </span>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="notification_qms_level" value="10">
+                                    <span class="radio-content">
+                                        <span class="radio-title">Новые диалоги</span>
+                                        <span class="radio-description">Только при начале нового диалога</span>
+                                    </span>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="notification_qms_level" value="0">
+                                    <span class="radio-content">
+                                        <span class="radio-title">Не оповещать</span>
+                                        <span class="radio-description">Отключить уведомления</span>
+                                    </span>
+                                </label>
+                            </fieldset>
+                        </div>
+                    </div>
 
-        <fieldset id="notification_themes_level">
-            <legend>Всплывающие сообщения</legend>
-            <label><input type="radio" name="notification_themes_level" value="20">Все комментарии</label>
-            <label><input type="radio" name="notification_themes_level" value="12">Все новые темы + комментарии в закреплённых темах</label>
-            <label><input type="radio" name="notification_themes_level" value="10">Все новые темы</label>
-            <!-- <label><input type="radio" name="notification_themes_level" value="9">Все комментарии в закреплённых темах</label> -->
-            <label><input type="radio" name="notification_themes_level" value="5">Новые закреплённые темы</label>
-            <label><input type="radio" name="notification_themes_level" value="0">Не оповещать</label>
-        </fieldset>
-        
-        <h3>Упоминания</h3>
+                    <!-- Themes Card -->
+                    <div class="settings-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Темы форума</h3>
+                            <p class="card-description">Избранные темы и обсуждения</p>
+                        </div>
+                        <div class="card-content">
+                            <div class="setting-group">
+                                <label class="setting-label">Всплывающие уведомления</label>
+                                <fieldset id="notification_themes_level" class="radio-group">
+                                    <label class="radio-card">
+                                        <input type="radio" name="notification_themes_level" value="20">
+                                        <span class="radio-content">
+                                            <span class="radio-title">Все комментарии</span>
+                                        </span>
+                                    </label>
+                                    <label class="radio-card">
+                                        <input type="radio" name="notification_themes_level" value="12">
+                                        <span class="radio-content">
+                                            <span class="radio-title">Новые темы + комментарии в закреплённых</span>
+                                        </span>
+                                    </label>
+                                    <label class="radio-card">
+                                        <input type="radio" name="notification_themes_level" value="10">
+                                        <span class="radio-content">
+                                            <span class="radio-title">Все новые темы</span>
+                                        </span>
+                                    </label>
+                                    <label class="radio-card">
+                                        <input type="radio" name="notification_themes_level" value="5">
+                                        <span class="radio-content">
+                                            <span class="radio-title">Новые закреплённые темы</span>
+                                        </span>
+                                    </label>
+                                    <label class="radio-card">
+                                        <input type="radio" name="notification_themes_level" value="0">
+                                        <span class="radio-content">
+                                            <span class="radio-title">Не оповещать</span>
+                                        </span>
+                                    </label>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
 
-        <fieldset id="notification_mentions_level">
-            <legend>Всплывающие сообщения</legend>
-            <label><input type="radio" name="notification_mentions_level" value="20">Все упоминания</label>
-            <label><input type="radio" name="notification_mentions_level" value="0">Не оповещать</label>
-        </fieldset>
+                    <!-- Mentions Card -->
+                    <div class="settings-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Упоминания</h3>
+                            <p class="card-description">Когда вас упоминают в комментариях</p>
+                        </div>
+                        <div class="card-content">
+                            <fieldset id="notification_mentions_level" class="radio-group">
+                                <label class="radio-card">
+                                    <input type="radio" name="notification_mentions_level" value="20">
+                                    <span class="radio-content">
+                                        <span class="radio-title">Все упоминания</span>
+                                        <span class="radio-description">Уведомлять о каждом упоминании</span>
+                                    </span>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="notification_mentions_level" value="0">
+                                    <span class="radio-content">
+                                        <span class="radio-title">Не оповещать</span>
+                                        <span class="radio-description">Отключить уведомления об упоминаниях</span>
+                                    </span>
+                                </label>
+                            </fieldset>
+                        </div>
+                    </div>
+                </section>
 
-        <h3>Всплывающая панель</h3>
+                <!-- Interval Section -->
+                <section class="content-section" id="interval-settings">
+                    <h2 class="section-title">Интервал обновления</h2>
+                    <p class="section-description">Как часто проверять новые сообщения и темы</p>
 
-        <label><input type="checkbox" id="toolbar_open_theme_hide">Закрывать попап при открытии темы (активировать новую вкладку)</label>
-        <label><input type="checkbox" id="toolbar_simple_list">Простой список тем</label>
+                    <div class="settings-card">
+                        <div class="card-content">
+                            <div class="slider-container">
+                                <label class="setting-label">Проверять каждые</label>
+                                <div class="slider-wrapper">
+                                    <input type="range" id="interval" class="slider" min="0" step="1">
+                                    <div class="slider-value" id="interval_output">30 сек</div>
+                                </div>
+                                <p class="setting-hint">Минимальный интервал: 30 секунд. Слишком частые проверки могут привести к ограничению со стороны сервера.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-        <h4>Управляющие кнопки</h4>
+                <!-- Behavior Section -->
+                <section class="content-section" id="behavior">
+                    <h2 class="section-title">Поведение</h2>
+                    <p class="section-description">Настройте работу всплывающей панели и управление темами</p>
 
-        <label><input type="checkbox" id="toolbar_button_open_all">"Открыть непрочитанные темы в новых вкладках"</label>
-        <label>Открывать порциями по: <input type="number" min="1" max="50" step="1" id="open_themes_limit"></label>
-        <label><input type="checkbox" id="toolbar_button_read_all">"Пометить все темы прочитанными"</label>
-		
+                    <!-- Pinned Themes Card -->
+                    <div class="settings-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Закреплённые темы</h3>
+                            <p class="card-description">Как отображать закреплённые темы в попапе</p>
+                        </div>
+                        <div class="card-content">
+                            <fieldset id="toolbar_pin_themes_level" class="radio-group">
+                                <label class="radio-card">
+                                    <input type="radio" name="toolbar_pin_themes_level" value="20">
+                                    <span class="radio-content">
+                                        <span class="radio-title">Показывать только закреплённые темы</span>
+                                        <span class="radio-description">Скрыть все остальные темы</span>
+                                    </span>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="toolbar_pin_themes_level" value="10">
+                                    <span class="radio-content">
+                                        <span class="radio-title">Выводить сверху в попапе</span>
+                                        <span class="radio-description">Закреплённые темы всегда наверху списка</span>
+                                    </span>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="toolbar_pin_themes_level" value="0">
+                                    <span class="radio-content">
+                                        <span class="radio-title">Только выделять цветом</span>
+                                        <span class="radio-description">Закреплённые темы выделены, но в общем списке</span>
+                                    </span>
+                                </label>
+                            </fieldset>
+                        </div>
+                    </div>
 
-        <div id="saveBlock">
-            <button id="saveSettings">Сохранить настройки</button>
-            <span id="saveStatus">Настройки сохранены.</span>
+                    <!-- Popup Behavior Card -->
+                    <div class="settings-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Всплывающая панель</h3>
+                        </div>
+                        <div class="card-content">
+                            <label class="toggle-setting">
+                                <div class="toggle-info">
+                                    <span class="toggle-label">Закрывать попап при открытии темы</span>
+                                    <span class="toggle-description">Автоматически активировать новую вкладку</span>
+                                </div>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="toolbar_open_theme_hide">
+                                    <span class="toggle-slider"></span>
+                                </div>
+                            </label>
+
+                            <label class="toggle-setting">
+                                <div class="toggle-info">
+                                    <span class="toggle-label">Простой список тем</span>
+                                    <span class="toggle-description">Скрыть дополнительную информацию о темах</span>
+                                </div>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="toolbar_simple_list">
+                                    <span class="toggle-slider"></span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Control Buttons Card -->
+                    <div class="settings-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Управляющие кнопки</h3>
+                            <p class="card-description">Кнопки массовых действий в попапе</p>
+                        </div>
+                        <div class="card-content">
+                            <label class="toggle-setting">
+                                <div class="toggle-info">
+                                    <span class="toggle-label">"Открыть непрочитанные темы"</span>
+                                    <span class="toggle-description">Показать кнопку массового открытия тем</span>
+                                </div>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="toolbar_button_open_all">
+                                    <span class="toggle-slider"></span>
+                                </div>
+                            </label>
+
+                            <div class="setting-group">
+                                <label class="setting-label">Открывать порциями по</label>
+                                <div class="number-stepper">
+                                    <button type="button" class="stepper-btn stepper-decrease" data-target="open_themes_limit">−</button>
+                                    <input type="number" min="1" max="50" step="1" id="open_themes_limit" class="number-input-stepper">
+                                    <button type="button" class="stepper-btn stepper-increase" data-target="open_themes_limit">+</button>
+                                    <span class="stepper-label">тем</span>
+                                </div>
+                                <p class="setting-hint">Ограничение количества одновременно открываемых вкладок</p>
+                            </div>
+
+                            <label class="toggle-setting">
+                                <div class="toggle-info">
+                                    <span class="toggle-label">"Пометить все темы прочитанными"</span>
+                                    <span class="toggle-description">Показать кнопку массовой пометки тем</span>
+                                </div>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="toolbar_button_read_all">
+                                    <span class="toggle-slider"></span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- About Section -->
+                <section class="content-section" id="about">
+                    <h2 class="section-title">О программе</h2>
+                    <p class="section-description">Информация о расширении 4PDA Live</p>
+
+                    <div class="settings-card">
+                        <div class="card-content about-content">
+                            <div class="about-logo">
+                                <img src="../img/icons/icon_128.png" alt="4PDA Live Logo" class="logo-image">
+                            </div>
+                            <div class="about-info">
+                                <h3 class="about-title">4PDA Live</h3>
+                                <p class="about-version">Версия 1.0.0</p>
+                                <p class="about-description">
+                                    Мониторинг изменений на форуме 4pda.to. 
+                                    Отслеживанием избранное, личные сообщения, упоминания, смеемся.
+                                </p>
+                                <div class="about-links">
+                                    <a href="https://4pda.to/forum/index.php?showtopic=343126" target="_blank" class="about-link">
+                                        Домашняя страница
+                                    </a>
+                                    <a href="https://github.com/DmitryN71/4pda-Live" target="_blank" class="about-link">
+                                        GitHub
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
         </div>
-    </main>
-    <footer>
-        <a href="https://4pda-inspector.github.io/4pda-inspector/" target="_blank">
-            <img src="/img/4.svg" id="a_logo" alt="logo"/>
-        </a>
-    </footer>
+    </div>
 
     <script src="options.js"></script>
 </body>
